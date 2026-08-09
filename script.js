@@ -106,8 +106,46 @@ const GRADIENTS = [
   { id:'plum-blue', css:'linear-gradient(135deg,#7A4DFF,#0082F3)' },
   { id:'red-orange', css:'linear-gradient(135deg,#FF4D5E,#FF9F43)' },
   { id:'midnight-plum', css:'linear-gradient(135deg,#131630,#7A4DFF)' },
+  { id:'sunset', css:'linear-gradient(135deg,#FF9F43,#FF2E88)' },
+  { id:'lime-mint', css:'linear-gradient(135deg,#B6F24C,#3EF2C8)' },
+  { id:'sky-ocean', css:'linear-gradient(135deg,#4CC9FF,#0082F3)' },
+  { id:'candy', css:'linear-gradient(135deg,#FF2E88,#FF9F43)' },
+  { id:'deep-violet', css:'linear-gradient(135deg,#1B1450,#7A4DFF)' },
+  { id:'neon-night', css:'linear-gradient(135deg,#0A0C24,#FF2E88)' },
+  { id:'berry', css:'linear-gradient(135deg,#C2185B,#7A4DFF)' },
+  { id:'tropic', css:'linear-gradient(135deg,#3EF2C8,#4CC9FF)' },
+  { id:'ember', css:'linear-gradient(135deg,#FF4D5E,#FFD23F)' },
+  { id:'aurora', css:'linear-gradient(135deg,#B6F24C,#0082F3)' },
 ];
-const ICONS = ['🎧','🎸','🎹','🥁','🎤','🎷','💿','📻'];
+const ICONS = ['🎧','🎸','🎹','🥁','🎤','🎷','💿','📻','🎺','🎻','🪕','🎼','🎵','🎶','🎚️','🎛️'];
+const MOTIFS = [
+  { id:'none', label:'Polos' },
+  { id:'groove', label:'Groove' },
+  { id:'vinyl', label:'Vinyl' },
+  { id:'dots', label:'Dot' },
+  { id:'stripes', label:'Stripes' },
+  { id:'checker', label:'Checker' },
+  { id:'grid', label:'Grid' },
+  { id:'ring', label:'Ring' },
+  { id:'eq', label:'Equalizer' },
+  { id:'zigzag', label:'Zigzag' },
+  { id:'star', label:'Bintang' },
+  { id:'note', label:'Not Balok' },
+];
+const FRAMES = [
+  { id:'none', label:'Tanpa' },
+  { id:'double', label:'Double' },
+  { id:'neon', label:'Neon' },
+  { id:'retro', label:'Retro' },
+  { id:'corners', label:'Kurung' },
+];
+const FONTS = [
+  { id:'anton', label:'Anton' },
+  { id:'bungee', label:'Bungee' },
+  { id:'archivo', label:'Archivo' },
+  { id:'caveat', label:'Caveat' },
+  { id:'monoton', label:'Monoton' },
+];
 
 /* ============ HELPERS ============ */
 const $ = (id) => document.getElementById(id);
@@ -261,6 +299,9 @@ const LS_CARDS = 'musickle_cards_v1';
 let cards = [];
 let currentGrad = GRADIENTS[0].css;
 let currentIcon = ICONS[0];
+let currentMotif = 'vinyl';
+let currentFrame = 'neon';
+let currentFont = 'anton';
 let editingId = null;
 
 function cardState() {
@@ -272,10 +313,23 @@ function cardState() {
     quote: $('cfQuote').value.trim(),
     grad: currentGrad,
     icon: currentIcon,
+    motif: currentMotif,
+    frame: currentFrame,
+    font: currentFont,
   };
 }
+function applyCardClasses(el, st) {
+  el.classList.remove('motif-none', 'motif-groove', 'motif-vinyl', 'motif-dots', 'motif-stripes', 'motif-checker', 'motif-grid', 'motif-ring', 'motif-eq', 'motif-zigzag', 'motif-star', 'motif-note');
+  el.classList.remove('frame-none', 'frame-double', 'frame-neon', 'frame-retro', 'frame-corners');
+  el.classList.remove('font-anton', 'font-bungee', 'font-archivo', 'font-caveat', 'font-monoton');
+  el.classList.add('motif-' + (st.motif || 'none'));
+  el.classList.add('frame-' + (st.frame || 'none'));
+  el.classList.add('font-' + (st.font || 'anton'));
+}
 function fillCard(st) {
-  $('matchCard').style.background = st.grad;
+  const card = $('matchCard');
+  card.style.background = st.grad;
+  applyCardClasses(card, st);
   $('mcIcon').textContent = st.icon;
   $('mcQuote').innerHTML = st.quote
     ? esc(st.quote)
@@ -312,6 +366,45 @@ $('iconPicker').addEventListener('click', (e) => {
   if (!opt) return;
   currentIcon = opt.dataset.icon;
   document.querySelectorAll('.icon-opt').forEach(o => o.classList.toggle('active', o === opt));
+  fillCard(cardState());
+});
+
+/* motif picker */
+$('motifPicker').innerHTML = MOTIFS.map(m => `
+  <div class="motif-opt ${m.id === currentMotif ? 'active' : ''}" data-motif="${m.id}">
+    <span class="mo-swatch motif-${m.id}"></span>${m.label}
+  </div>`).join('');
+$('motifPicker').addEventListener('click', (e) => {
+  const opt = e.target.closest('.motif-opt');
+  if (!opt) return;
+  currentMotif = opt.dataset.motif;
+  document.querySelectorAll('.motif-opt').forEach(o => o.classList.toggle('active', o === opt));
+  fillCard(cardState());
+});
+
+/* frame picker */
+$('framePicker').innerHTML = FRAMES.map(f => `
+  <div class="frame-opt ${f.id === currentFrame ? 'active' : ''}" data-frame="${f.id}">
+    <span class="fr-swatch"></span>${f.label}
+  </div>`).join('');
+$('framePicker').addEventListener('click', (e) => {
+  const opt = e.target.closest('.frame-opt');
+  if (!opt) return;
+  currentFrame = opt.dataset.frame;
+  document.querySelectorAll('.frame-opt').forEach(o => o.classList.toggle('active', o === opt));
+  fillCard(cardState());
+});
+
+/* font picker */
+$('fontPicker').innerHTML = FONTS.map(f => `
+  <div class="font-opt ${f.id === currentFont ? 'active' : ''}" data-font="${f.id}">
+    <span class="fo-swatch">Aa</span>${f.label}
+  </div>`).join('');
+$('fontPicker').addEventListener('click', (e) => {
+  const opt = e.target.closest('.font-opt');
+  if (!opt) return;
+  currentFont = opt.dataset.font;
+  document.querySelectorAll('.font-opt').forEach(o => o.classList.toggle('active', o === opt));
   fillCard(cardState());
 });
 
@@ -355,7 +448,8 @@ function renderGallery() {
   }
   grid.innerHTML = cards.map((c, i) => `
     <div class="gallery-item" data-id="${c.id}">
-      <div class="match-card" style="background:${c.grad}">
+      <div class="match-card motif-${c.motif || 'none'} frame-${c.frame || 'none'} font-${c.font || 'anton'}" style="background:${c.grad}">
+        <div class="mc-motif" aria-hidden="true"></div>
         <div class="mc-top"><span class="mc-badge">♪ MUSICKLE MATCH</span></div>
         <div class="mc-icon">${c.icon}</div>
         <div class="mc-quote">${esc(c.quote) || 'Lagu ini <b>kamu banget</b>.'}</div>
@@ -387,8 +481,12 @@ $('galleryGrid').addEventListener('click', (e) => {
     $('cfName').value = c.name; $('cfSong').value = c.song; $('cfArtist').value = c.artist;
     $('cfVibe').value = c.vibe || ''; $('cfQuote').value = c.quote || '';
     currentGrad = c.grad; currentIcon = c.icon;
+    currentMotif = c.motif || 'none'; currentFrame = c.frame || 'none'; currentFont = c.font || 'anton';
     document.querySelectorAll('.grad-opt').forEach(o => o.classList.toggle('active', o.style.background === c.grad || o.dataset.grad === GRADIENTS.find(g => g.css === c.grad)?.id));
     document.querySelectorAll('.icon-opt').forEach(o => o.classList.toggle('active', o.dataset.icon === c.icon));
+    document.querySelectorAll('.motif-opt').forEach(o => o.classList.toggle('active', o.dataset.motif === currentMotif));
+    document.querySelectorAll('.frame-opt').forEach(o => o.classList.toggle('active', o.dataset.frame === currentFrame));
+    document.querySelectorAll('.font-opt').forEach(o => o.classList.toggle('active', o.dataset.font === currentFont));
     fillCard(cardState());
     $('saveCardBtn').textContent = '💾 Update Card';
     $('card-form-col').scrollIntoView({ behavior: 'smooth' });
@@ -420,6 +518,7 @@ function wrapText(ctx, text, x, y, maxW, lineH) {
     } else line = test;
   }
   ctx.fillText(line, x, yy);
+  return yy + lineH;
 }
 
 /* ============ PREVIEW 30 DETIK (iTunes Search API) ============ */
@@ -525,6 +624,10 @@ function renderCardCanvas(st) {
   g.addColorStop(1, colors[colors.length - 1]);
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, W, H);
+
+  /* motif */
+  drawMotif(ctx, W, H, st.motif || 'none');
+
   ctx.fillStyle = 'rgba(255,255,255,.16)';
   ctx.beginPath(); ctx.arc(W * .85, H * .06, 170, 0, Math.PI * 2); ctx.fill();
   ctx.textAlign = 'center';
@@ -539,21 +642,129 @@ function renderCardCanvas(st) {
   ctx.fillText('Lagu ini kamu banget.', W / 2, 330);
   ctx.fillStyle = 'rgba(255,255,255,.9)';
   ctx.fillRect(W * .12, 372, W * .76, 4);
+
+  /* font judul sesuai pilihan */
+  const fontMap = { anton: "'Anton'", bungee: "'Bungee'", archivo: "'Archivo Black'", caveat: "'Caveat'", monoton: "'Monoton'" };
+  const fam = fontMap[st.font] || "'Anton'";
   ctx.fillStyle = '#fff';
-  ctx.font = '700 46px Poppins, sans-serif';
-  wrapText(ctx, st.song || 'Judul Lagu', W / 2, 440, W * .8, 56);
+  ctx.font = `700 46px ${fam}, sans-serif`;
+  const songY = wrapText(ctx, st.song || 'Judul Lagu', W / 2, 440, W * .8, 58);
   ctx.fillStyle = 'rgba(255,255,255,.85)';
   ctx.font = '500 26px Poppins, sans-serif';
-  ctx.fillText(st.artist || 'Penyanyi', W / 2, 545);
+  ctx.fillText(st.artist || 'Penyanyi', W / 2, Math.max(545, songY + 70));
+  const bottomBase = Math.max(545, songY + 70) + 55;
   if (vibeLabel) {
     ctx.fillStyle = 'rgba(255,255,255,.9)';
     ctx.font = '600 24px Poppins, sans-serif';
-    ctx.fillText(vibeLabel.icon + ' ' + vibeLabel.name.toUpperCase(), W / 2, 600);
+    ctx.fillText(vibeLabel.icon + ' ' + vibeLabel.name.toUpperCase(), W / 2, bottomBase);
   }
   ctx.fillStyle = 'rgba(255,255,255,.65)';
   ctx.font = '500 20px Poppins, sans-serif';
-  ctx.fillText('dibuat oleh ' + (st.name || 'kamu') + ' · musikle', W / 2, 690);
+  ctx.fillText('dibuat oleh ' + (st.name || 'kamu') + ' · musikle', W / 2, bottomBase + 90);
+
+  /* frame */
+  drawFrame(ctx, W, H, st.frame || 'none');
   return cv;
+}
+
+function drawMotif(ctx, W, H, motif) {
+  ctx.save();
+  ctx.globalAlpha = 0.55;
+  ctx.strokeStyle = 'rgba(255,255,255,.35)';
+  ctx.fillStyle = 'rgba(255,255,255,.30)';
+  const cx = W / 2, cy = H * .42;
+  switch (motif) {
+    case 'groove':
+      for (let y = 0; y < H; y += 12) { ctx.fillRect(0, y, W, 2); }
+      break;
+    case 'vinyl':
+      for (let r = 40; r < W; r += 22) { ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke(); }
+      break;
+    case 'dots':
+      ctx.fillStyle = 'rgba(255,255,255,.35)';
+      for (let x = 14; x < W; x += 26) { for (let y = 14; y < H; y += 26) { ctx.beginPath(); ctx.arc(x, y, 2, 0, Math.PI * 2); ctx.fill(); } }
+      break;
+    case 'stripes':
+      ctx.strokeStyle = 'rgba(255,255,255,.22)';
+      for (let x = -H; x < W; x += 28) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x + H, H); ctx.stroke(); }
+      break;
+    case 'checker':
+      const s = 60;
+      for (let x = 0; x < W; x += s) { for (let y = 0; y < H; y += s) { if ((x / s + y / s) % 2 === 0) ctx.fillRect(x, y, s, s); } }
+      break;
+    case 'grid':
+      ctx.strokeStyle = 'rgba(255,255,255,.16)';
+      for (let x = 0; x < W; x += 44) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+      for (let y = 0; y < H; y += 44) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+      break;
+    case 'ring':
+      for (let r = 30; r < 420; r += 34) { ctx.beginPath(); ctx.arc(W * .8, H * .18, r, 0, Math.PI * 2); ctx.stroke(); }
+      break;
+    case 'eq':
+      ctx.fillStyle = 'rgba(255,255,255,.35)';
+      const bw = 18, gap = 12, n = Math.floor(W / (bw + gap));
+      for (let i = 0; i < n; i++) {
+        const h = 40 + ((i * 53) % 180);
+        ctx.fillRect(i * (bw + gap) + 10, H - h - 30, bw, h);
+      }
+      break;
+    case 'zigzag':
+      ctx.strokeStyle = 'rgba(255,255,255,.28)';
+      ctx.lineWidth = 3;
+      for (let y = -40; y < H; y += 90) {
+        ctx.beginPath();
+        for (let x = 0; x < W; x += 45) { const yy = y + (Math.floor(x / 45) % 2 === 0 ? 0 : 45); ctx.lineTo(x, yy); }
+        ctx.stroke();
+      }
+      break;
+    case 'star':
+      ctx.fillStyle = 'rgba(255,255,255,.6)';
+      for (let i = 0; i < 90; i++) {
+        const x = (i * 137.5) % W, y = (i * 89.3) % H, r = 1 + (i % 3);
+        ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+      }
+      break;
+    case 'note':
+      ctx.fillStyle = 'rgba(255,255,255,.4)';
+      ctx.font = '46px serif';
+      ['♪', '♫', '♩', '♬', '♭', '♮'].forEach((n, i) => { ctx.fillText(n, 30 + i * 95, 90 + (i % 2) * 40); ctx.fillText(n, 60 + i * 90, H - 60 - (i % 3) * 50); });
+      break;
+  }
+  ctx.restore();
+}
+
+function drawFrame(ctx, W, H, frame) {
+  ctx.save();
+  ctx.strokeStyle = 'rgba(255,255,255,.9)';
+  ctx.lineWidth = 5;
+  switch (frame) {
+    case 'double':
+      ctx.strokeRect(24, 24, W - 48, H - 48);
+      ctx.lineWidth = 2;
+      ctx.strokeRect(44, 44, W - 88, H - 88);
+      break;
+    case 'neon':
+      ctx.shadowColor = '#FF2E88';
+      ctx.shadowBlur = 30;
+      ctx.strokeRect(20, 20, W - 40, H - 40);
+      ctx.shadowBlur = 0;
+      ctx.lineWidth = 2;
+      ctx.strokeRect(20, 20, W - 40, H - 40);
+      break;
+    case 'retro':
+      ctx.setLineDash([16, 12]);
+      ctx.strokeRect(30, 30, W - 60, H - 60);
+      break;
+    case 'corners':
+      ctx.lineWidth = 6;
+      const L = 64;
+      const pts = [[30, 30, 1, 1], [W - 30, 30, -1, 1], [30, H - 30, 1, -1], [W - 30, H - 30, -1, -1]];
+      pts.forEach(([x, y, dx, dy]) => {
+        ctx.beginPath(); ctx.moveTo(x + dx * L, y); ctx.lineTo(x, y); ctx.lineTo(x, y + dy * L); ctx.stroke();
+      });
+      break;
+  }
+  ctx.restore();
 }
 
 function canvasToBlob(cv) {

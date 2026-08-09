@@ -5,23 +5,26 @@
    glow orbs, gradient signature 29deg.
 ============================================================ */
 :root{
-  --bg: #03051C;
-  --bg-2: #0B0E24;
-  --bg-3: #131630;
-  --card: #171A2E;
-  --card-2: #1D2140;
-  --line: rgba(255,255,255,.08);
-  --line-strong: rgba(255,255,255,.16);
+  --bg: #0A0C24;
+  --bg-2: #141033;
+  --bg-3: #1B1450;
+  --card: #1A1640;
+  --card-2: #241C5C;
+  --line: rgba(255,255,255,.10);
+  --line-strong: rgba(255,255,255,.18);
   --ink: #FFFFFF;
-  --ink-dim: #A8ADD0;
-  --ink-faint: #6B7198;
+  --ink-dim: #B4B8E0;
+  --ink-faint: #7B7FAE;
   --hot-pink: #FF2E88;
   --hot-yellow: #FFD23F;
   --plum: #7A4DFF;
   --blue: #0082F3;
   --mint: #3EF2C8;
   --red: #FF4D5E;
-  --grad-sig: linear-gradient(29deg, #03051C 52%, #212443);
+  --orange: #FF9F43;
+  --lime: #B6F24C;
+  --sky: #4CC9FF;
+  --grad-sig: linear-gradient(29deg, #0A0C24 30%, #241C5C 75%, #3A1E6E);
   --grad-rainbow: linear-gradient(90deg, var(--hot-pink) 0%, var(--hot-yellow) 25%, var(--plum) 50%, var(--hot-pink) 75%, var(--hot-yellow) 100%);
   --grad-text: linear-gradient(90deg, var(--hot-pink), var(--hot-yellow) 45%, var(--plum));
   --radius: 20px;
@@ -29,6 +32,16 @@
   --maxw: 1180px;
   --font-display: 'Anton', 'Arial Black', sans-serif;
   --font-body: 'Poppins', sans-serif;
+}
+html{scroll-behavior:smooth;}
+body{
+  background:
+    radial-gradient(ellipse 80% 50% at 15% -5%, rgba(122,77,255,.20), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 15%, rgba(255,46,136,.14), transparent 55%),
+    radial-gradient(ellipse 70% 45% at 75% 85%, rgba(62,242,200,.10), transparent 60%),
+    radial-gradient(ellipse 55% 40% at 8% 70%, rgba(255,210,63,.08), transparent 55%),
+    linear-gradient(180deg, #0A0C24 0%, #120F33 45%, #0C102E 100%);
+  background-attachment: fixed;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
@@ -707,3 +720,110 @@ body.ready .hero-eq{animation:heroIn 1s cubic-bezier(.22,.9,.32,1) .45s both;}
 body.ready .vinyl-wrap{animation:heroIn 1s cubic-bezier(.22,.9,.32,1) .6s both, vinylFloat 7s ease-in-out 1s infinite;}
 @keyframes heroIn{from{opacity:0;transform:translateY(26px);}to{opacity:1;transform:translateY(0);}}
 @keyframes vinylFloat{0%,100%{margin-top:0;}50%{margin-top:-14px;}}
+
+/* ============================================================
+   CARD MAKER V2 — motif, bingkai, font, warna hidup
+   ============================================================ */
+
+/* ---------- layer motif di preview card ---------- */
+.match-card{position:relative;overflow:hidden;}
+.mc-motif{
+  position:absolute;inset:0;pointer-events:none;opacity:.5;z-index:0;
+  mix-blend-mode:screen;
+}
+.match-card > *:not(.mc-motif){position:relative;z-index:1;}
+
+/* ---------- 12 motif (CSS pattern) ---------- */
+.motif-none .mc-motif{opacity:0;}
+.motif-groove .mc-motif{background:repeating-linear-gradient(180deg, rgba(255,255,255,.14) 0 3px, transparent 3px 12px);}
+.motif-vinyl .mc-motif{background:repeating-radial-gradient(circle at 50% 42%, transparent 0 22px, rgba(255,255,255,.12) 22px 23px);}
+.motif-dots .mc-motif{background-image:radial-gradient(rgba(255,255,255,.30) 1.6px, transparent 1.8px);background-size:22px 22px;}
+.motif-stripes .mc-motif{background:repeating-linear-gradient(45deg, rgba(255,255,255,.16) 0 10px, transparent 10px 26px);}
+.motif-checker .mc-motif{background:repeating-conic-gradient(rgba(255,255,255,.12) 0% 25%, transparent 0% 50%);background-size:34px 34px;}
+.motif-grid .mc-motif{background-image:linear-gradient(rgba(255,255,255,.13) 1px, transparent 1px),linear-gradient(90deg, rgba(255,255,255,.13) 1px, transparent 1px);background-size:30px 30px;}
+.motif-ring .mc-motif{background:repeating-radial-gradient(circle at 80% 18%, rgba(255,255,255,.16) 0 2px, transparent 2px 26px);}
+.motif-eq .mc-motif{background:repeating-linear-gradient(90deg, rgba(255,255,255,.20) 0 8px, transparent 8px 16px);background-size:100% 100%;}
+.motif-zigzag .mc-motif{
+  background:linear-gradient(135deg, rgba(255,255,255,.14) 25%, transparent 25%) -20px 0/40px 40px,
+             linear-gradient(225deg, rgba(255,255,255,.14) 25%, transparent 25%) -20px 0/40px 40px,
+             linear-gradient(315deg, rgba(255,255,255,.14) 25%, transparent 25%) 0 0/40px 40px,
+             linear-gradient(45deg, rgba(255,255,255,.14) 25%, transparent 25%) 0 0/40px 40px;
+}
+.motif-star .mc-motif{
+  background-image:radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,.55), transparent),
+                   radial-gradient(2px 2px at 60px 90px, rgba(255,255,255,.35), transparent),
+                   radial-gradient(2px 2px at 100px 40px, rgba(255,255,255,.5), transparent),
+                   radial-gradient(2px 2px at 140px 110px, rgba(255,255,255,.4), transparent),
+                   radial-gradient(2px 2px at 40px 140px, rgba(255,255,255,.45), transparent);
+  background-size:160px 160px;
+}
+.motif-note .mc-motif{
+  background-image:radial-gradient(circle at 18px 22px, rgba(255,255,255,.5) 5px, transparent 6px),
+                   radial-gradient(circle at 38px 14px, rgba(255,255,255,.35) 3px, transparent 4px),
+                   radial-gradient(circle at 78px 38px, rgba(255,255,255,.45) 4px, transparent 5px);
+  background-size:96px 96px;
+}
+
+/* ---------- 5 bingkai ---------- */
+.frame-none .match-card{border:none;border-radius:0;}
+.frame-double .match-card{outline:3px solid rgba(255,255,255,.85);outline-offset:-10px;border-radius:18px;}
+.frame-neon .match-card{outline:2px solid rgba(255,255,255,.9);outline-offset:-6px;box-shadow:0 0 0 4px rgba(255,46,136,.55), 0 0 34px rgba(255,46,136,.45), 0 46px 100px rgba(0,0,0,.6);}
+.frame-retro .match-card{border:3px dashed rgba(255,255,255,.85);border-radius:18px;outline:2px solid rgba(255,255,255,.35);outline-offset:5px;}
+.frame-corners .match-card{border:none;}
+.frame-corners .match-card::before,.frame-corners .match-card::after{
+  content:"";position:absolute;width:46px;height:46px;z-index:3;pointer-events:none;
+}
+.frame-corners .match-card::before{top:14px;left:14px;border-top:3px solid #fff;border-left:3px solid #fff;border-radius:6px 0 0 0;}
+.frame-corners .match-card::after{bottom:14px;right:14px;border-bottom:3px solid #fff;border-right:3px solid #fff;border-radius:0 0 6px 0;}
+.frame-corners .match-card{border:none;}
+
+/* ---------- 5 font judul card ---------- */
+.font-anton .mc-song{font-family:'Anton',sans-serif;letter-spacing:.01em;}
+.font-bungee .mc-song{font-family:'Bungee',cursive;letter-spacing:.01em;}
+.font-archivo .mc-song{font-family:'Archivo Black',sans-serif;letter-spacing:.01em;}
+.font-caveat .mc-song{font-family:'Caveat',cursive;letter-spacing:.01em;font-size:1.5em;}
+.font-monoton .mc-song{font-family:'Monoton',cursive;letter-spacing:.04em;font-weight:400;}
+
+/* ---------- picker baru ---------- */
+.motif-picker,.frame-picker,.font-picker{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px;}
+.motif-opt,.frame-opt,.font-opt{
+  border:2px solid var(--line);border-radius:var(--radius-sm);cursor:pointer;
+  background:var(--card);color:var(--ink-dim);font-family:var(--font-body);
+  font-size:11px;font-weight:600;padding:10px 6px;transition:all .2s;
+  display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;min-height:74px;
+}
+.motif-opt:hover,.frame-opt:hover,.font-opt:hover{border-color:var(--hot-pink);transform:translateY(-2px);}
+.motif-opt.active,.frame-opt.active,.font-opt.active{border-color:var(--hot-pink);background:rgba(255,46,136,.12);color:#fff;box-shadow:0 0 0 1px var(--hot-pink);}
+.motif-opt .mo-swatch{width:100%;height:34px;border-radius:8px;border:1px solid var(--line-strong);background:linear-gradient(135deg,#FF2E88,#7A4DFF);}
+.motif-opt .mo-swatch{overflow:hidden;position:relative;}
+.frame-opt .fr-swatch{width:38px;height:38px;border-radius:8px;background:linear-gradient(135deg,#FFD23F,#FF2E88);position:relative;}
+.font-opt .fo-swatch{font-size:17px;line-height:38px;height:38px;color:#fff;white-space:nowrap;}
+.font-opt[data-font="caveat"] .fo-swatch{font-family:'Caveat',cursive;font-size:22px;}
+.font-opt[data-font="bungee"] .fo-swatch{font-family:'Bungee',cursive;font-size:14px;}
+.font-opt[data-font="monoton"] .fo-swatch{font-family:'Monoton',cursive;font-size:13px;}
+.font-opt[data-font="archivo"] .fo-swatch{font-family:'Archivo Black',sans-serif;font-size:14px;}
+.font-opt[data-font="anton"] .fo-swatch{font-family:'Anton',sans-serif;font-size:16px;}
+
+/* preview mini motif di swatch */
+.mo-swatch.motif-groove{background:repeating-linear-gradient(180deg, rgba(255,255,255,.5) 0 2px, rgba(255,46,136,.4) 2px 8px);}
+.mo-swatch.motif-vinyl{background:repeating-radial-gradient(circle at 50% 50%, #FF2E88 0 6px, #7A4DFF 6px 7px);}
+.mo-swatch.motif-dots{background-image:radial-gradient(#fff 1.4px, transparent 1.6px);background-size:12px 12px;background-color:var(--plum);}
+.mo-swatch.motif-stripes{background:repeating-linear-gradient(45deg, #FFD23F 0 5px, #FF2E88 5px 12px);}
+.mo-swatch.motif-checker{background:repeating-conic-gradient(#fff 0% 25%, var(--plum) 0% 50%);background-size:18px 18px;}
+.mo-swatch.motif-grid{background-image:linear-gradient(#fff 1px, transparent 1px),linear-gradient(90deg, #fff 1px, transparent 1px);background-size:14px 14px;background-color:var(--blue);}
+.mo-swatch.motif-ring{background:repeating-radial-gradient(circle at 70% 30%, #fff 0 1.5px, transparent 1.5px 10px);background-color:var(--hot-pink);}
+.mo-swatch.motif-eq{background:repeating-linear-gradient(90deg, #fff 0 4px, transparent 4px 8px);background-color:var(--mint);}
+.mo-swatch.motif-zigzag{background:linear-gradient(135deg, #fff 25%, transparent 25%) -8px 0/16px 16px,linear-gradient(225deg, #fff 25%, transparent 25%) -8px 0/16px 16px,linear-gradient(315deg, #fff 25%, transparent 25%) 0 0/16px 16px,linear-gradient(45deg, #fff 25%, transparent 25%) 0 0/16px 16px;background-color:var(--red);}
+.mo-swatch.motif-star{background-color:var(--bg-3);background-image:radial-gradient(1.4px 1.4px at 8px 12px, #fff, transparent),radial-gradient(1.4px 1.4px at 24px 34px, #fff, transparent),radial-gradient(1.4px 1.4px at 40px 16px, #fff, transparent);background-size:48px 48px;}
+.mo-swatch.motif-note{background-color:var(--orange);}
+.mo-swatch.motif-none{background:linear-gradient(135deg,#FF2E88,#7A4DFF);}
+
+/* mini frame preview */
+.frame-opt[data-frame="none"] .fr-swatch{border:none;border-radius:0;}
+.frame-opt[data-frame="double"] .fr-swatch{outline:2px solid #fff;outline-offset:-4px;}
+.frame-opt[data-frame="neon"] .fr-swatch{outline:2px solid #fff;outline-offset:-3px;box-shadow:0 0 0 3px var(--hot-pink);}
+.frame-opt[data-frame="retro"] .fr-swatch{border:2px dashed #fff;}
+.frame-opt[data-frame="corners"] .fr-swatch{background:linear-gradient(135deg,#3EF2C8,#0082F3);}
+
+/* gallery items ikut variasi */
+.gallery-item .match-card{overflow:hidden;}

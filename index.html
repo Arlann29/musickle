@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#03051C">
+<meta name="theme-color" content="#141033">
 <title>MUSICKLE — Musik yang Kamu Banget</title>
 <meta name="description" content="Temukan musik yang cocok banget sama kepribadianmu: pilih sifat musik, eksplor penyanyi, trending, energi, dan bikin card kesesuaian lagumu sendiri.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bungee&family=Caveat:wght@600;700&family=Monoton&family=Archivo+Black&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -232,6 +232,7 @@
       <!-- Preview -->
       <div class="card-preview-col">
         <div class="match-card" id="matchCard">
+          <div class="mc-motif" aria-hidden="true"></div>
           <div class="mc-top">
             <span class="mc-badge">♪ MUSICKLE MATCH</span>
             <span class="mc-num" id="mcNum">01</span>
@@ -279,7 +280,19 @@
           <span class="form-label">Ikon</span>
           <div class="icon-picker" id="iconPicker"></div>
         </div>
-        <p class="form-hint">Card tersimpan otomatis di browser kamu (localStorage) — bisa diedit & dihapus kapan aja.</p>
+        <div class="form-block">
+          <span class="form-label">Motif / tekstur</span>
+          <div class="motif-picker" id="motifPicker"></div>
+        </div>
+        <div class="form-block">
+          <span class="form-label">Bingkai</span>
+          <div class="frame-picker" id="framePicker"></div>
+        </div>
+        <div class="form-block">
+          <span class="form-label">Font judul</span>
+          <div class="font-picker" id="fontPicker"></div>
+        </div>
+        <p class="form-hint">Card tersimpan otomatis di browser kamu (localStorage) — bisa diedit & dihapus kapan aja. Kombinasi motif × bingkai × font × warna = ratusan variasi.</p>
       </div>
     </div>
 
