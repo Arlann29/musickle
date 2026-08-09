@@ -100,22 +100,30 @@ const ENERGY_POOL = [
 ];
 
 const GRADIENTS = [
-  { id:'pink-plum', css:'linear-gradient(135deg,#FF2E88,#7A4DFF)' },
+  { id:'pink-plum', css:'linear-gradient(135deg,#FF2E88,#A78BFA)' },
   { id:'yellow-pink', css:'linear-gradient(135deg,#FFD23F,#FF2E88)' },
   { id:'blue-mint', css:'linear-gradient(135deg,#0082F3,#3EF2C8)' },
-  { id:'plum-blue', css:'linear-gradient(135deg,#7A4DFF,#0082F3)' },
+  { id:'plum-blue', css:'linear-gradient(135deg,#A78BFA,#0082F3)' },
   { id:'red-orange', css:'linear-gradient(135deg,#FF4D5E,#FF9F43)' },
-  { id:'midnight-plum', css:'linear-gradient(135deg,#131630,#7A4DFF)' },
+  { id:'midnight-plum', css:'linear-gradient(135deg,#171237,#A78BFA)' },
   { id:'sunset', css:'linear-gradient(135deg,#FF9F43,#FF2E88)' },
   { id:'lime-mint', css:'linear-gradient(135deg,#B6F24C,#3EF2C8)' },
   { id:'sky-ocean', css:'linear-gradient(135deg,#4CC9FF,#0082F3)' },
   { id:'candy', css:'linear-gradient(135deg,#FF2E88,#FF9F43)' },
-  { id:'deep-violet', css:'linear-gradient(135deg,#1B1450,#7A4DFF)' },
+  { id:'deep-violet', css:'linear-gradient(135deg,#1E1750,#A78BFA)' },
   { id:'neon-night', css:'linear-gradient(135deg,#0A0C24,#FF2E88)' },
-  { id:'berry', css:'linear-gradient(135deg,#C2185B,#7A4DFF)' },
+  { id:'berry', css:'linear-gradient(135deg,#C2185B,#A78BFA)' },
   { id:'tropic', css:'linear-gradient(135deg,#3EF2C8,#4CC9FF)' },
   { id:'ember', css:'linear-gradient(135deg,#FF4D5E,#FFD23F)' },
   { id:'aurora', css:'linear-gradient(135deg,#B6F24C,#0082F3)' },
+  { id:'lavender-soft', css:'linear-gradient(135deg,#C4B5FD,#A78BFA)' },
+  { id:'rose-lavender', css:'linear-gradient(135deg,#FDA4C8,#C4B5FD)' },
+  { id:'peach-soft', css:'linear-gradient(135deg,#FFD9A0,#FDA4C8)' },
+  { id:'mint-lavender', css:'linear-gradient(135deg,#B9F2DE,#C4B5FD)' },
+  { id:'sky-lavender', css:'linear-gradient(135deg,#A5DFFF,#C4B5FD)' },
+  { id:'pastel-pop', css:'linear-gradient(135deg,#FFE29A,#A5DFFF)' },
+  { id:'soft-ember', css:'linear-gradient(135deg,#FFC9A1,#FFB3C7)' },
+  { id:'honey-lavender', css:'linear-gradient(135deg,#FFE9A8,#C4B5FD)' },
 ];
 const ICONS = ['🎧','🎸','🎹','🥁','🎤','🎷','💿','📻','🎺','🎻','🪕','🎼','🎵','🎶','🎚️','🎛️'];
 const MOTIFS = [
@@ -131,6 +139,14 @@ const MOTIFS = [
   { id:'zigzag', label:'Zigzag' },
   { id:'star', label:'Bintang' },
   { id:'note', label:'Not Balok' },
+  { id:'bubble', label:'Gelembung' },
+  { id:'confetti', label:'Konfeti' },
+  { id:'heart', label:'Hati' },
+  { id:'wave', label:'Ombak' },
+  { id:'rays', label:'Sinar' },
+  { id:'ticket', label:'Tiket' },
+  { id:'lightning', label:'Petir' },
+  { id:'marble', label:'Marmer' },
 ];
 const FRAMES = [
   { id:'none', label:'Tanpa' },
@@ -138,6 +154,9 @@ const FRAMES = [
   { id:'neon', label:'Neon' },
   { id:'retro', label:'Retro' },
   { id:'corners', label:'Kurung' },
+  { id:'bold', label:'Tebal' },
+  { id:'golden', label:'Emas' },
+  { id:'sticker', label:'Stiker' },
 ];
 const FONTS = [
   { id:'anton', label:'Anton' },
@@ -145,6 +164,15 @@ const FONTS = [
   { id:'archivo', label:'Archivo' },
   { id:'caveat', label:'Caveat' },
   { id:'monoton', label:'Monoton' },
+  { id:'fredoka', label:'Fredoka' },
+  { id:'lobster', label:'Lobster' },
+  { id:'righteous', label:'Righteous' },
+  { id:'spaceg', label:'Space G.' },
+];
+const POSITIONS = [
+  { id:'center', label:'Tengah' },
+  { id:'top', label:'Atas' },
+  { id:'bottom', label:'Bawah' },
 ];
 
 /* ============ HELPERS ============ */
@@ -302,6 +330,7 @@ let currentIcon = ICONS[0];
 let currentMotif = 'vinyl';
 let currentFrame = 'neon';
 let currentFont = 'anton';
+let currentPos = 'center';
 let editingId = null;
 
 function cardState() {
@@ -316,15 +345,18 @@ function cardState() {
     motif: currentMotif,
     frame: currentFrame,
     font: currentFont,
+    pos: currentPos,
   };
 }
 function applyCardClasses(el, st) {
-  el.classList.remove('motif-none', 'motif-groove', 'motif-vinyl', 'motif-dots', 'motif-stripes', 'motif-checker', 'motif-grid', 'motif-ring', 'motif-eq', 'motif-zigzag', 'motif-star', 'motif-note');
-  el.classList.remove('frame-none', 'frame-double', 'frame-neon', 'frame-retro', 'frame-corners');
-  el.classList.remove('font-anton', 'font-bungee', 'font-archivo', 'font-caveat', 'font-monoton');
+  el.classList.remove('motif-none', 'motif-groove', 'motif-vinyl', 'motif-dots', 'motif-stripes', 'motif-checker', 'motif-grid', 'motif-ring', 'motif-eq', 'motif-zigzag', 'motif-star', 'motif-note', 'motif-bubble', 'motif-confetti', 'motif-heart', 'motif-wave', 'motif-rays', 'motif-ticket', 'motif-lightning', 'motif-marble');
+  el.classList.remove('frame-none', 'frame-double', 'frame-neon', 'frame-retro', 'frame-corners', 'frame-bold', 'frame-golden', 'frame-sticker');
+  el.classList.remove('font-anton', 'font-bungee', 'font-archivo', 'font-caveat', 'font-monoton', 'font-fredoka', 'font-lobster', 'font-righteous', 'font-spaceg');
+  el.classList.remove('pos-center', 'pos-top', 'pos-bottom');
   el.classList.add('motif-' + (st.motif || 'none'));
   el.classList.add('frame-' + (st.frame || 'none'));
   el.classList.add('font-' + (st.font || 'anton'));
+  el.classList.add('pos-' + (st.pos || 'center'));
 }
 function fillCard(st) {
   const card = $('matchCard');
@@ -408,6 +440,19 @@ $('fontPicker').addEventListener('click', (e) => {
   fillCard(cardState());
 });
 
+/* posisi picker */
+$('posPicker').innerHTML = POSITIONS.map(p => `
+  <div class="pos-opt ${p.id === currentPos ? 'active' : ''}" data-pos="${p.id}">
+    <span class="po-swatch"></span>${p.label}
+  </div>`).join('');
+$('posPicker').addEventListener('click', (e) => {
+  const opt = e.target.closest('.pos-opt');
+  if (!opt) return;
+  currentPos = opt.dataset.pos;
+  document.querySelectorAll('.pos-opt').forEach(o => o.classList.toggle('active', o === opt));
+  fillCard(cardState());
+});
+
 /* live preview */
 ['cfName', 'cfSong', 'cfArtist', 'cfVibe', 'cfQuote'].forEach(id => {
   $(id).addEventListener('input', () => fillCard(cardState()));
@@ -448,7 +493,7 @@ function renderGallery() {
   }
   grid.innerHTML = cards.map((c, i) => `
     <div class="gallery-item" data-id="${c.id}">
-      <div class="match-card motif-${c.motif || 'none'} frame-${c.frame || 'none'} font-${c.font || 'anton'}" style="background:${c.grad}">
+      <div class="match-card motif-${c.motif || 'none'} frame-${c.frame || 'none'} font-${c.font || 'anton'} pos-${c.pos || 'center'}" style="background:${c.grad}">
         <div class="mc-motif" aria-hidden="true"></div>
         <div class="mc-top"><span class="mc-badge">♪ MUSICKLE MATCH</span></div>
         <div class="mc-icon">${c.icon}</div>
@@ -481,12 +526,13 @@ $('galleryGrid').addEventListener('click', (e) => {
     $('cfName').value = c.name; $('cfSong').value = c.song; $('cfArtist').value = c.artist;
     $('cfVibe').value = c.vibe || ''; $('cfQuote').value = c.quote || '';
     currentGrad = c.grad; currentIcon = c.icon;
-    currentMotif = c.motif || 'none'; currentFrame = c.frame || 'none'; currentFont = c.font || 'anton';
+    currentMotif = c.motif || 'none'; currentFrame = c.frame || 'none'; currentFont = c.font || 'anton'; currentPos = c.pos || 'center';
     document.querySelectorAll('.grad-opt').forEach(o => o.classList.toggle('active', o.style.background === c.grad || o.dataset.grad === GRADIENTS.find(g => g.css === c.grad)?.id));
     document.querySelectorAll('.icon-opt').forEach(o => o.classList.toggle('active', o.dataset.icon === c.icon));
     document.querySelectorAll('.motif-opt').forEach(o => o.classList.toggle('active', o.dataset.motif === currentMotif));
     document.querySelectorAll('.frame-opt').forEach(o => o.classList.toggle('active', o.dataset.frame === currentFrame));
     document.querySelectorAll('.font-opt').forEach(o => o.classList.toggle('active', o.dataset.font === currentFont));
+    document.querySelectorAll('.pos-opt').forEach(o => o.classList.toggle('active', o.dataset.pos === currentPos));
     fillCard(cardState());
     $('saveCardBtn').textContent = '💾 Update Card';
     $('card-form-col').scrollIntoView({ behavior: 'smooth' });
@@ -644,15 +690,17 @@ function renderCardCanvas(st) {
   ctx.fillRect(W * .12, 372, W * .76, 4);
 
   /* font judul sesuai pilihan */
-  const fontMap = { anton: "'Anton'", bungee: "'Bungee'", archivo: "'Archivo Black'", caveat: "'Caveat'", monoton: "'Monoton'" };
+  const fontMap = { anton: "'Anton'", bungee: "'Bungee'", archivo: "'Archivo Black'", caveat: "'Caveat'", monoton: "'Monoton'", fredoka: "'Fredoka'", lobster: "'Lobster'", righteous: "'Righteous'", spaceg: "'Space Grotesk'" };
   const fam = fontMap[st.font] || "'Anton'";
+  /* posisi teks: offset Y */
+  const posOff = st.pos === 'top' ? -130 : st.pos === 'bottom' ? 130 : 0;
   ctx.fillStyle = '#fff';
   ctx.font = `700 46px ${fam}, sans-serif`;
-  const songY = wrapText(ctx, st.song || 'Judul Lagu', W / 2, 440, W * .8, 58);
+  const songY = wrapText(ctx, st.song || 'Judul Lagu', W / 2, 440 + posOff, W * .8, 58);
   ctx.fillStyle = 'rgba(255,255,255,.85)';
   ctx.font = '500 26px Poppins, sans-serif';
-  ctx.fillText(st.artist || 'Penyanyi', W / 2, Math.max(545, songY + 70));
-  const bottomBase = Math.max(545, songY + 70) + 55;
+  ctx.fillText(st.artist || 'Penyanyi', W / 2, Math.max(545 + posOff, songY + 70));
+  const bottomBase = Math.max(545 + posOff, songY + 70) + 55;
   if (vibeLabel) {
     ctx.fillStyle = 'rgba(255,255,255,.9)';
     ctx.font = '600 24px Poppins, sans-serif';
@@ -729,6 +777,73 @@ function drawMotif(ctx, W, H, motif) {
       ctx.font = '46px serif';
       ['♪', '♫', '♩', '♬', '♭', '♮'].forEach((n, i) => { ctx.fillText(n, 30 + i * 95, 90 + (i % 2) * 40); ctx.fillText(n, 60 + i * 90, H - 60 - (i % 3) * 50); });
       break;
+    case 'bubble':
+      ctx.strokeStyle = 'rgba(255,255,255,.30)';
+      ctx.lineWidth = 2;
+      for (let i = 0; i < 14; i++) {
+        const x = (i * 97) % W, y = (i * 61) % H, r = 12 + (i % 5) * 7;
+        ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.stroke();
+      }
+      break;
+    case 'confetti':
+      ctx.fillStyle = 'rgba(255,255,255,.5)';
+      for (let i = 0; i < 80; i++) {
+        const x = (i * 71) % W, y = (i * 47) % H, s = 4 + (i % 4) * 3;
+        ctx.save(); ctx.translate(x, y); ctx.rotate((i * 0.7) % Math.PI); ctx.fillRect(-s / 2, -s / 2, s, s * 0.6); ctx.restore();
+      }
+      break;
+    case 'heart':
+      ctx.fillStyle = 'rgba(255,255,255,.4)';
+      for (let i = 0; i < 12; i++) {
+        const x = (i * 89 + 20) % W, y = (i * 73 + 16) % H, s = 8 + (i % 3) * 5;
+        ctx.font = s + 'px serif'; ctx.fillText('♥', x, y);
+      }
+      break;
+    case 'wave':
+      ctx.strokeStyle = 'rgba(255,255,255,.30)';
+      ctx.lineWidth = 3;
+      for (let w = 0; w < 4; w++) {
+        ctx.beginPath();
+        for (let x = 0; x <= W; x += 12) {
+          const y = H * (0.2 + w * 0.2) + Math.sin(x / 60 + w * 1.5) * 22;
+          x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }
+      break;
+    case 'rays':
+      ctx.strokeStyle = 'rgba(255,255,255,.18)';
+      ctx.lineWidth = 6;
+      for (let a = 0; a < 360; a += 24) {
+        ctx.beginPath();
+        ctx.moveTo(W / 2, H * .4);
+        ctx.lineTo(W / 2 + Math.cos(a * Math.PI / 180) * 800, H * .4 + Math.sin(a * Math.PI / 180) * 800);
+        ctx.stroke();
+      }
+      break;
+    case 'ticket':
+      ctx.strokeStyle = 'rgba(255,255,255,.25)';
+      ctx.lineWidth = 3;
+      ctx.setLineDash([26, 18]);
+      for (let y = 60; y < H; y += 70) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+      ctx.setLineDash([]);
+      break;
+    case 'lightning':
+      ctx.fillStyle = 'rgba(255,255,255,.35)';
+      ctx.font = '70px serif';
+      for (let i = 0; i < 5; i++) { ctx.fillText('⚡', 40 + i * 130, 120 + (i % 2) * 60); ctx.fillText('⚡', 90 + i * 120, H - 100 - (i % 3) * 50); }
+      break;
+    case 'marble':
+      ctx.strokeStyle = 'rgba(255,255,255,.14)';
+      ctx.lineWidth = 14;
+      for (let i = 0; i < 10; i++) {
+        ctx.beginPath();
+        const y0 = (i * 83) % H;
+        ctx.moveTo(-40, y0);
+        ctx.bezierCurveTo(W * .3, y0 - 90, W * .7, y0 + 90, W + 40, y0 - 30);
+        ctx.stroke();
+      }
+      break;
   }
   ctx.restore();
 }
@@ -762,6 +877,28 @@ function drawFrame(ctx, W, H, frame) {
       pts.forEach(([x, y, dx, dy]) => {
         ctx.beginPath(); ctx.moveTo(x + dx * L, y); ctx.lineTo(x, y); ctx.lineTo(x, y + dy * L); ctx.stroke();
       });
+      break;
+    case 'bold':
+      ctx.lineWidth = 16;
+      ctx.strokeRect(16, 16, W - 32, H - 32);
+      break;
+    case 'golden':
+      ctx.strokeStyle = '#FFD23F';
+      ctx.shadowColor = 'rgba(255,210,63,.7)';
+      ctx.shadowBlur = 22;
+      ctx.lineWidth = 4;
+      ctx.strokeRect(26, 26, W - 52, H - 52);
+      ctx.shadowBlur = 0;
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(40, 40, W - 80, H - 80);
+      break;
+    case 'sticker':
+      ctx.strokeStyle = 'rgba(255,255,255,.85)';
+      ctx.lineWidth = 6;
+      ctx.strokeRect(34, 34, W - 68, H - 68);
+      ctx.strokeStyle = 'rgba(0,0,0,.35)';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(46, 46, W - 92, H - 92);
       break;
   }
   ctx.restore();

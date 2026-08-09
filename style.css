@@ -6,25 +6,28 @@
 ============================================================ */
 :root{
   --bg: #0A0C24;
-  --bg-2: #141033;
-  --bg-3: #1B1450;
-  --card: #1A1640;
-  --card-2: #241C5C;
+  --bg-2: #171237;
+  --bg-3: #1E1750;
+  --card: #1F1952;
+  --card-2: #2A2166;
   --line: rgba(255,255,255,.10);
   --line-strong: rgba(255,255,255,.18);
   --ink: #FFFFFF;
-  --ink-dim: #B4B8E0;
-  --ink-faint: #7B7FAE;
+  --ink-dim: #B9BCE6;
+  --ink-faint: #8286B8;
   --hot-pink: #FF2E88;
   --hot-yellow: #FFD23F;
-  --plum: #7A4DFF;
+  --plum: #A78BFA;
+  --plum-deep: #7C5CE0;
   --blue: #0082F3;
   --mint: #3EF2C8;
   --red: #FF4D5E;
   --orange: #FF9F43;
   --lime: #B6F24C;
   --sky: #4CC9FF;
-  --grad-sig: linear-gradient(29deg, #0A0C24 30%, #241C5C 75%, #3A1E6E);
+  --lavender: #C4B5FD;
+  --rose: #FDA4C8;
+  --grad-sig: linear-gradient(29deg, #0A0C24 30%, #241B5E 75%, #3E2D7E);
   --grad-rainbow: linear-gradient(90deg, var(--hot-pink) 0%, var(--hot-yellow) 25%, var(--plum) 50%, var(--hot-pink) 75%, var(--hot-yellow) 100%);
   --grad-text: linear-gradient(90deg, var(--hot-pink), var(--hot-yellow) 45%, var(--plum));
   --radius: 20px;
@@ -36,11 +39,11 @@
 html{scroll-behavior:smooth;}
 body{
   background:
-    radial-gradient(ellipse 80% 50% at 15% -5%, rgba(122,77,255,.20), transparent 60%),
-    radial-gradient(ellipse 60% 40% at 90% 15%, rgba(255,46,136,.14), transparent 55%),
-    radial-gradient(ellipse 70% 45% at 75% 85%, rgba(62,242,200,.10), transparent 60%),
-    radial-gradient(ellipse 55% 40% at 8% 70%, rgba(255,210,63,.08), transparent 55%),
-    linear-gradient(180deg, #0A0C24 0%, #120F33 45%, #0C102E 100%);
+    radial-gradient(ellipse 80% 50% at 15% -5%, rgba(167,139,250,.20), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 15%, rgba(255,46,136,.12), transparent 55%),
+    radial-gradient(ellipse 70% 45% at 75% 85%, rgba(62,242,200,.09), transparent 60%),
+    radial-gradient(ellipse 55% 40% at 8% 70%, rgba(255,210,63,.07), transparent 55%),
+    linear-gradient(180deg, #0A0C24 0%, #151140 45%, #0C102E 100%);
   background-attachment: fixed;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -827,3 +830,67 @@ body.ready .vinyl-wrap{animation:heroIn 1s cubic-bezier(.22,.9,.32,1) .6s both, 
 
 /* gallery items ikut variasi */
 .gallery-item .match-card{overflow:hidden;}
+
+/* ============================================================
+   CARD MAKER V3 — motif/frame/font tambahan + posisi teks
+   ============================================================ */
+
+/* ---------- 8 motif baru ---------- */
+.motif-bubble .mc-motif{background:radial-gradient(circle at 12% 24%, rgba(255,255,255,.35) 5px, transparent 6px),radial-gradient(circle at 68% 70%, rgba(255,255,255,.30) 8px, transparent 9px),radial-gradient(circle at 30% 84%, rgba(255,255,255,.28) 6px, transparent 7px),radial-gradient(circle at 84% 22%, rgba(255,255,255,.32) 7px, transparent 8px),radial-gradient(circle at 46% 44%, rgba(255,255,255,.30) 9px, transparent 10px);background-size:240px 240px;}
+.motif-confetti .mc-motif{background-image:radial-gradient(3px 3px at 24px 40px, rgba(255,255,255,.6), transparent),radial-gradient(4px 5px at 90px 30px, rgba(255,255,255,.4), transparent),radial-gradient(3px 4px at 150px 90px, rgba(255,255,255,.5), transparent),radial-gradient(4px 3px at 60px 130px, rgba(255,255,255,.45), transparent),radial-gradient(3px 3px at 180px 150px, rgba(255,255,255,.5), transparent);background-size:200px 180px;}
+.motif-heart .mc-motif{background-image:radial-gradient(circle at 20px 26px, rgba(255,255,255,.5) 6px, transparent 7px),radial-gradient(circle at 60px 66px, rgba(255,255,255,.35) 5px, transparent 6px),radial-gradient(circle at 100px 40px, rgba(255,255,255,.45) 5px, transparent 6px),radial-gradient(circle at 140px 100px, rgba(255,255,255,.4) 6px, transparent 7px);background-size:170px 140px;}
+.motif-wave .mc-motif{background:repeating-linear-gradient(180deg, transparent 0 22px, rgba(255,255,255,.22) 22px 26px, transparent 26px 52px);}
+.motif-rays .mc-motif{background:conic-gradient(from 30deg at 50% 40%, rgba(255,255,255,.16) 0 10deg, transparent 10deg 30deg, rgba(255,255,255,.13) 30deg 40deg, transparent 40deg 60deg, rgba(255,255,255,.15) 60deg 70deg, transparent 70deg 90deg, rgba(255,255,255,.14) 90deg 100deg, transparent 100deg 120deg, rgba(255,255,255,.16) 120deg 130deg, transparent 130deg 150deg, rgba(255,255,255,.12) 150deg 160deg, transparent 160deg 180deg, rgba(255,255,255,.15) 180deg 190deg, transparent 190deg 210deg, rgba(255,255,255,.14) 210deg 220deg, transparent 220deg 240deg, rgba(255,255,255,.16) 240deg 250deg, transparent 250deg 270deg, rgba(255,255,255,.13) 270deg 280deg, transparent 280deg 300deg, rgba(255,255,255,.15) 300deg 310deg, transparent 310deg 330deg, rgba(255,255,255,.14) 330deg 340deg, transparent 340deg 360deg);}
+.motif-ticket .mc-motif{background:repeating-linear-gradient(180deg, rgba(255,255,255,.16) 0 2px, transparent 2px 26px);}
+.motif-lightning .mc-motif{background-image:radial-gradient(circle at 30px 40px, rgba(255,255,255,.5) 4px, transparent 5px),radial-gradient(circle at 110px 80px, rgba(255,255,255,.4) 4px, transparent 5px),radial-gradient(circle at 160px 30px, rgba(255,255,255,.45) 4px, transparent 5px),radial-gradient(circle at 70px 120px, rgba(255,255,255,.4) 4px, transparent 5px);background-size:190px 160px;}
+.motif-marble .mc-motif{background:radial-gradient(ellipse 60% 40% at 20% 30%, rgba(255,255,255,.30), transparent 60%),radial-gradient(ellipse 50% 35% at 80% 65%, rgba(255,255,255,.22), transparent 55%),radial-gradient(ellipse 40% 30% at 55% 15%, rgba(255,255,255,.18), transparent 50%);}
+
+/* ---------- 3 frame baru ---------- */
+.frame-bold .match-card{border:14px solid rgba(255,255,255,.92);border-radius:14px;}
+.frame-golden .match-card{border:4px solid #FFD23F;outline:2px solid rgba(255,210,63,.4);outline-offset:6px;box-shadow:0 0 0 3px rgba(255,210,63,.15), 0 0 40px rgba(255,210,63,.25);}
+.frame-sticker .match-card{border:6px solid #fff;outline:4px solid rgba(0,0,0,.4);outline-offset:2px;border-radius:26px;box-shadow:0 10px 30px rgba(0,0,0,.35);}
+
+/* ---------- 4 font baru ---------- */
+.font-fredoka .mc-song{font-family:'Fredoka',sans-serif;letter-spacing:.01em;}
+.font-lobster .mc-song{font-family:'Lobster',cursive;letter-spacing:.01em;font-size:1.25em;}
+.font-righteous .mc-song{font-family:'Righteous',cursive;letter-spacing:.02em;}
+.font-spaceg .mc-song{font-family:'Space Grotesk',sans-serif;letter-spacing:.01em;font-weight:700;}
+
+/* ---------- posisi teks ---------- */
+.pos-top .match-card{padding-bottom:150px;}
+.pos-bottom .match-card{padding-top:320px;}
+
+/* ---------- pos picker ---------- */
+.pos-picker{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.pos-opt{
+  border:2px solid var(--line);border-radius:var(--radius-sm);cursor:pointer;
+  background:var(--card);color:var(--ink-dim);font-family:var(--font-body);
+  font-size:11px;font-weight:600;padding:10px 6px;transition:all .2s;
+  display:flex;flex-direction:column;align-items:center;gap:6px;min-height:66px;
+}
+.pos-opt:hover{border-color:var(--hot-pink);transform:translateY(-2px);}
+.pos-opt.active{border-color:var(--hot-pink);background:rgba(255,46,136,.12);color:#fff;box-shadow:0 0 0 1px var(--hot-pink);}
+.po-swatch{
+  width:38px;height:38px;border-radius:8px;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#C4B5FD,#A78BFA);
+}
+.po-swatch::before{content:"Aa";position:absolute;left:50%;transform:translateX(-50%);font-size:10px;font-weight:800;color:#fff;background:rgba(0,0,0,.35);padding:2px 6px;border-radius:4px;}
+.pos-opt[data-pos="top"] .po-swatch::before{top:4px;}
+.pos-opt[data-pos="center"] .po-swatch::before{top:50%;transform:translate(-50%,-50%);}
+.pos-opt[data-pos="bottom"] .po-swatch::before{bottom:4px;}
+
+/* ---------- swatch motif baru ---------- */
+.mo-swatch.motif-bubble{background:radial-gradient(circle at 30% 30%, #fff 3px, transparent 4px),radial-gradient(circle at 70% 60%, #fff 4px, transparent 5px);background-color:var(--sky);background-size:34px 34px;}
+.mo-swatch.motif-confetti{background-color:var(--hot-pink);background-image:radial-gradient(2px 2px at 10px 16px, #fff, transparent),radial-gradient(2px 3px at 28px 8px, #fff, transparent),radial-gradient(2px 2px at 40px 26px, #fff, transparent);background-size:48px 48px;}
+.mo-swatch.motif-heart{background-color:var(--rose);background-image:radial-gradient(3px 3px at 8px 10px, #fff, transparent);background-size:24px 24px;}
+.mo-swatch.motif-wave{background:repeating-linear-gradient(180deg, transparent 0 5px, #fff 5px 7px, transparent 7px 14px);background-color:var(--blue);}
+.mo-swatch.motif-rays{background:conic-gradient(from 20deg at 50% 50%, #fff 0 12deg, transparent 12deg 42deg, #fff 42deg 54deg, transparent 54deg 84deg, #fff 84deg 96deg, transparent 96deg 126deg, #fff 126deg 138deg, transparent 138deg 168deg, #fff 168deg 180deg, transparent 180deg 210deg, #fff 210deg 222deg, transparent 222deg 252deg, #fff 252deg 264deg, transparent 264deg 294deg, #fff 294deg 306deg, transparent 306deg 336deg, #fff 336deg 348deg, transparent 348deg 360deg);}
+.mo-swatch.motif-ticket{background:repeating-linear-gradient(180deg, #fff 0 2px, transparent 2px 8px);background-color:var(--plum);}
+.mo-swatch.motif-lightning{background-color:var(--hot-yellow);background-image:radial-gradient(2px 2px at 12px 20px, #000, transparent);background-size:34px 34px;}
+.mo-swatch.motif-marble{background:radial-gradient(ellipse 60% 40% at 25% 30%, #fff, transparent 60%),radial-gradient(ellipse 50% 35% at 75% 65%, rgba(255,255,255,.7), transparent 55%);background-color:var(--plum-deep);}
+
+/* ---------- swatch font baru ---------- */
+.font-opt[data-font="fredoka"] .fo-swatch{font-family:'Fredoka',sans-serif;font-size:16px;}
+.font-opt[data-font="lobster"] .fo-swatch{font-family:'Lobster',cursive;font-size:20px;}
+.font-opt[data-font="righteous"] .fo-swatch{font-family:'Righteous',cursive;font-size:15px;}
+.font-opt[data-font="spaceg"] .fo-swatch{font-family:'Space Grotesk',sans-serif;font-size:16px;}
