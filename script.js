@@ -57,18 +57,18 @@ const SIFAT = [
 ];
 
 const ARTIS = [
-  { name:'Pamungkas', genre:'R&B / Pop', tags:['chill','romantis','deep'], top:'To the Bone', grad:'linear-gradient(135deg,#FF7A3D,#6FA8FF)' },
-  { name:'Nadin Amizah', genre:'Folk / Indie', tags:['lembut','puitis','tenang'], top:'Bertaut', grad:'linear-gradient(135deg,#FFB020,#FF7A3D)' },
-  { name:'Hindia', genre:'Indie Rock', tags:['dalam','kritik','renung'], top:'Rumah ke Rumah', grad:'linear-gradient(135deg,#6FA8FF,#1D6FE0)' },
-  { name:'Raisa', genre:'Pop', tags:['hangat','aduhai','smooth'], top:'Luar Biasa', grad:'linear-gradient(135deg,#1D6FE0,#34D399)' },
-  { name:'The Weeknd', genre:'R&B / Synth', tags:['dramatis','malam','ikonik'], top:'Blinding Lights', grad:'linear-gradient(135deg,#EF4444,#F97316)' },
-  { name:'Dua Lipa', genre:'Pop / Dance', tags:['energik','disco','gaspol'], top:'Levitating', grad:'linear-gradient(135deg,#FF7A3D,#FFB020)' },
-  { name:'Coldplay', genre:'Alt Rock', tags:['emosional','megah','hopeful'], top:'Viva La Vida', grad:'linear-gradient(135deg,#1B2B4A,#6FA8FF)' },
-  { name:'Taylor Swift', genre:'Pop / Country', tags:['storytelling','galau','nostalgia'], top:'All Too Well', grad:'linear-gradient(135deg,#FFB020,#F97316)' },
-  { name:'NIKI', genre:'R&B', tags:['lembut','intim','mellow'], top:'Every Summertime', grad:'linear-gradient(135deg,#34D399,#1D6FE0)' },
-  { name:'Rich Brian', genre:'Hip-hop', tags:['santai','witty','lowkey'], top:'Dat $tick', grad:'linear-gradient(135deg,#6FA8FF,#FF7A3D)' },
-  { name:'Tulus', genre:'Jazz Pop', tags:['romantis','classy','hangat'], top:'Hati-Hati di Jalan', grad:'linear-gradient(135deg,#F97316,#FFB020)' },
-  { name:'Billie Eilish', genre:'Alt Pop', tags:['misterius','whisper','melankolis'], top:'Lovely', grad:'linear-gradient(135deg,#1B2B4A,#1D6FE0)' },
+  { name:'Pamungkas', genre:'R&B / Pop', tags:['chill','romantis','deep'], top:'To the Bone', grad:'linear-gradient(135deg,#E8925A,#8FB0E0)' },
+  { name:'Nadin Amizah', genre:'Folk / Indie', tags:['lembut','puitis','tenang'], top:'Bertaut', grad:'linear-gradient(135deg,#E3B25F,#E8925A)' },
+  { name:'Hindia', genre:'Indie Rock', tags:['dalam','kritik','renung'], top:'Rumah ke Rumah', grad:'linear-gradient(135deg,#8FB0E0,#6E96CC)' },
+  { name:'Raisa', genre:'Pop', tags:['hangat','aduhai','smooth'], top:'Luar Biasa', grad:'linear-gradient(135deg,#6E96CC,#7FC4B2)' },
+  { name:'The Weeknd', genre:'R&B / Synth', tags:['dramatis','malam','ikonik'], top:'Blinding Lights', grad:'linear-gradient(135deg,#D9776B,#D97A45)' },
+  { name:'Dua Lipa', genre:'Pop / Dance', tags:['energik','disco','gaspol'], top:'Levitating', grad:'linear-gradient(135deg,#E8925A,#E3B25F)' },
+  { name:'Coldplay', genre:'Alt Rock', tags:['emosional','megah','hopeful'], top:'Viva La Vida', grad:'linear-gradient(135deg,#232A3C,#8FB0E0)' },
+  { name:'Taylor Swift', genre:'Pop / Country', tags:['storytelling','galau','nostalgia'], top:'All Too Well', grad:'linear-gradient(135deg,#E3B25F,#D97A45)' },
+  { name:'NIKI', genre:'R&B', tags:['lembut','intim','mellow'], top:'Every Summertime', grad:'linear-gradient(135deg,#7FC4B2,#6E96CC)' },
+  { name:'Rich Brian', genre:'Hip-hop', tags:['santai','witty','lowkey'], top:'Dat $tick', grad:'linear-gradient(135deg,#8FB0E0,#E8925A)' },
+  { name:'Tulus', genre:'Jazz Pop', tags:['romantis','classy','hangat'], top:'Hati-Hati di Jalan', grad:'linear-gradient(135deg,#D97A45,#E3B25F)' },
+  { name:'Billie Eilish', genre:'Alt Pop', tags:['misterius','whisper','melankolis'], top:'Lovely', grad:'linear-gradient(135deg,#232A3C,#6E96CC)' },
 ];
 
 const TRENDING = [
@@ -100,30 +100,30 @@ const ENERGY_POOL = [
 ];
 
 const GRADIENTS = [
-  { id:'pink-plum', css:'linear-gradient(135deg,#FF7A3D,#6FA8FF)' },
-  { id:'yellow-pink', css:'linear-gradient(135deg,#FFB020,#FF7A3D)' },
-  { id:'blue-mint', css:'linear-gradient(135deg,#1D6FE0,#34D399)' },
-  { id:'plum-blue', css:'linear-gradient(135deg,#6FA8FF,#1D6FE0)' },
-  { id:'red-orange', css:'linear-gradient(135deg,#EF4444,#F97316)' },
-  { id:'midnight-plum', css:'linear-gradient(135deg,#16304F,#6FA8FF)' },
-  { id:'sunset', css:'linear-gradient(135deg,#F97316,#FF7A3D)' },
-  { id:'lime-mint', css:'linear-gradient(135deg,#A3E635,#34D399)' },
-  { id:'sky-ocean', css:'linear-gradient(135deg,#7CC4FF,#1D6FE0)' },
-  { id:'candy', css:'linear-gradient(135deg,#FF7A3D,#F97316)' },
-  { id:'deep-violet', css:'linear-gradient(135deg,#1F3A6E,#6FA8FF)' },
-  { id:'neon-night', css:'linear-gradient(135deg,#12243D,#FF7A3D)' },
-  { id:'berry', css:'linear-gradient(135deg,#C2410C,#6FA8FF)' },
-  { id:'tropic', css:'linear-gradient(135deg,#34D399,#7CC4FF)' },
-  { id:'ember', css:'linear-gradient(135deg,#EF4444,#FFB020)' },
-  { id:'aurora', css:'linear-gradient(135deg,#A3E635,#1D6FE0)' },
-  { id:'lavender-soft', css:'linear-gradient(135deg,#BFDBFE,#6FA8FF)' },
-  { id:'rose-lavender', css:'linear-gradient(135deg,#FFC9B6,#BFDBFE)' },
-  { id:'peach-soft', css:'linear-gradient(135deg,#FFD9A0,#FFC9B6)' },
-  { id:'mint-lavender', css:'linear-gradient(135deg,#B9F2DE,#BFDBFE)' },
-  { id:'sky-lavender', css:'linear-gradient(135deg,#A5DFFF,#BFDBFE)' },
-  { id:'pastel-pop', css:'linear-gradient(135deg,#FFE29A,#A5DFFF)' },
-  { id:'soft-ember', css:'linear-gradient(135deg,#FFC9A1,#FFB3C7)' },
-  { id:'honey-lavender', css:'linear-gradient(135deg,#FFE9A8,#BFDBFE)' },
+  { id:'pink-plum', css:'linear-gradient(135deg,#E8925A,#8FB0E0)' },
+  { id:'yellow-pink', css:'linear-gradient(135deg,#E3B25F,#E8925A)' },
+  { id:'blue-mint', css:'linear-gradient(135deg,#6E96CC,#7FC4B2)' },
+  { id:'plum-blue', css:'linear-gradient(135deg,#8FB0E0,#6E96CC)' },
+  { id:'red-orange', css:'linear-gradient(135deg,#D9776B,#D97A45)' },
+  { id:'midnight-plum', css:'linear-gradient(135deg,#223047,#8FB0E0)' },
+  { id:'sunset', css:'linear-gradient(135deg,#D97A45,#E8925A)' },
+  { id:'lime-mint', css:'linear-gradient(135deg,#B7C98C,#7FC4B2)' },
+  { id:'sky-ocean', css:'linear-gradient(135deg,#A5C8E8,#6E96CC)' },
+  { id:'candy', css:'linear-gradient(135deg,#E8925A,#D97A45)' },
+  { id:'deep-violet', css:'linear-gradient(135deg,#2C3F5E,#8FB0E0)' },
+  { id:'neon-night', css:'linear-gradient(135deg,#1B1E2A,#E8925A)' },
+  { id:'berry', css:'linear-gradient(135deg,#B45F3A,#8FB0E0)' },
+  { id:'tropic', css:'linear-gradient(135deg,#7FC4B2,#A5C8E8)' },
+  { id:'ember', css:'linear-gradient(135deg,#D9776B,#E3B25F)' },
+  { id:'aurora', css:'linear-gradient(135deg,#B7C98C,#6E96CC)' },
+  { id:'lavender-soft', css:'linear-gradient(135deg,#C9DBF2,#8FB0E0)' },
+  { id:'rose-lavender', css:'linear-gradient(135deg,#F2C6B8,#C9DBF2)' },
+  { id:'peach-soft', css:'linear-gradient(135deg,#F5D9B0,#F2C6B8)' },
+  { id:'mint-lavender', css:'linear-gradient(135deg,#CFE8DC,#C9DBF2)' },
+  { id:'sky-lavender', css:'linear-gradient(135deg,#C3E0F2,#C9DBF2)' },
+  { id:'pastel-pop', css:'linear-gradient(135deg,#F5DFAE,#C3E0F2)' },
+  { id:'soft-ember', css:'linear-gradient(135deg,#F0CBB0,#EFC4C2)' },
+  { id:'honey-lavender', css:'linear-gradient(135deg,#F7E6B8,#C9DBF2)' },
 ];
 const ICONS = ['🎧','🎸','🎹','🥁','🎤','🎷','💿','📻','🎺','🎻','🪕','🎼','🎵','🎶','🎚️','🎛️'];
 const MOTIFS = [
@@ -665,7 +665,7 @@ function renderCardCanvas(st) {
   cv.width = W; cv.height = H;
   const ctx = cv.getContext('2d');
   const g = ctx.createLinearGradient(0, 0, W, H);
-  const colors = st.grad.match(/#[0-9a-fA-F]{6}/g) || ['#FF7A3D', '#6FA8FF'];
+  const colors = st.grad.match(/#[0-9a-fA-F]{6}/g) || ['#E8925A', '#8FB0E0'];
   g.addColorStop(0, colors[0]);
   g.addColorStop(1, colors[colors.length - 1]);
   ctx.fillStyle = g;
@@ -859,7 +859,7 @@ function drawFrame(ctx, W, H, frame) {
       ctx.strokeRect(44, 44, W - 88, H - 88);
       break;
     case 'neon':
-      ctx.shadowColor = '#FF7A3D';
+      ctx.shadowColor = '#E8925A';
       ctx.shadowBlur = 30;
       ctx.strokeRect(20, 20, W - 40, H - 40);
       ctx.shadowBlur = 0;
@@ -883,7 +883,7 @@ function drawFrame(ctx, W, H, frame) {
       ctx.strokeRect(16, 16, W - 32, H - 32);
       break;
     case 'golden':
-      ctx.strokeStyle = '#FFB020';
+      ctx.strokeStyle = '#E3B25F';
       ctx.shadowColor = 'rgba(255,210,63,.7)';
       ctx.shadowBlur = 22;
       ctx.lineWidth = 4;
