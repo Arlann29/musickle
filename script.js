@@ -328,7 +328,7 @@ function saveCards() {
 $('saveCardBtn').addEventListener('click', () => {
   const st = cardState();
   if (!st.song || !st.artist) {
-    alert('Isi minimal judul lagu & penyanyi dulu ya 🎵');
+    toast('Isi minimal judul lagu & penyanyi dulu ya 🎵');
     return;
   }
   const record = { id: editingId || 'C' + Date.now().toString(36).toUpperCase(), ...st, created: Date.now() };
