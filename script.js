@@ -57,16 +57,16 @@ const SIFAT = [
 ];
 
 const ARTIS = [
-  { name:'Pamungkas', genre:'R&B / Pop', tags:['chill','romantis','deep'], top:'To the Bone', grad:'linear-gradient(135deg,#FF2E88,#7A4DFF)' },
+  { name:'Pamungkas', genre:'R&B / Pop', tags:['chill','romantis','deep'], top:'To the Bone', grad:'linear-gradient(135deg,#FF2E88,#A78BFA)' },
   { name:'Nadin Amizah', genre:'Folk / Indie', tags:['lembut','puitis','tenang'], top:'Bertaut', grad:'linear-gradient(135deg,#FFD23F,#FF2E88)' },
-  { name:'Hindia', genre:'Indie Rock', tags:['dalam','kritik','renung'], top:'Rumah ke Rumah', grad:'linear-gradient(135deg,#7A4DFF,#0082F3)' },
+  { name:'Hindia', genre:'Indie Rock', tags:['dalam','kritik','renung'], top:'Rumah ke Rumah', grad:'linear-gradient(135deg,#A78BFA,#0082F3)' },
   { name:'Raisa', genre:'Pop', tags:['hangat','aduhai','smooth'], top:'Luar Biasa', grad:'linear-gradient(135deg,#0082F3,#3EF2C8)' },
   { name:'The Weeknd', genre:'R&B / Synth', tags:['dramatis','malam','ikonik'], top:'Blinding Lights', grad:'linear-gradient(135deg,#FF4D5E,#FF9F43)' },
   { name:'Dua Lipa', genre:'Pop / Dance', tags:['energik','disco','gaspol'], top:'Levitating', grad:'linear-gradient(135deg,#FF2E88,#FFD23F)' },
-  { name:'Coldplay', genre:'Alt Rock', tags:['emosional','megah','hopeful'], top:'Viva La Vida', grad:'linear-gradient(135deg,#131630,#7A4DFF)' },
+  { name:'Coldplay', genre:'Alt Rock', tags:['emosional','megah','hopeful'], top:'Viva La Vida', grad:'linear-gradient(135deg,#131630,#A78BFA)' },
   { name:'Taylor Swift', genre:'Pop / Country', tags:['storytelling','galau','nostalgia'], top:'All Too Well', grad:'linear-gradient(135deg,#FFD23F,#FF9F43)' },
   { name:'NIKI', genre:'R&B', tags:['lembut','intim','mellow'], top:'Every Summertime', grad:'linear-gradient(135deg,#3EF2C8,#0082F3)' },
-  { name:'Rich Brian', genre:'Hip-hop', tags:['santai','witty','lowkey'], top:'Dat $tick', grad:'linear-gradient(135deg,#7A4DFF,#FF2E88)' },
+  { name:'Rich Brian', genre:'Hip-hop', tags:['santai','witty','lowkey'], top:'Dat $tick', grad:'linear-gradient(135deg,#A78BFA,#FF2E88)' },
   { name:'Tulus', genre:'Jazz Pop', tags:['romantis','classy','hangat'], top:'Hati-Hati di Jalan', grad:'linear-gradient(135deg,#FF9F43,#FFD23F)' },
   { name:'Billie Eilish', genre:'Alt Pop', tags:['misterius','whisper','melankolis'], top:'Lovely', grad:'linear-gradient(135deg,#131630,#0082F3)' },
 ];
@@ -665,7 +665,7 @@ function renderCardCanvas(st) {
   cv.width = W; cv.height = H;
   const ctx = cv.getContext('2d');
   const g = ctx.createLinearGradient(0, 0, W, H);
-  const colors = st.grad.match(/#[0-9a-fA-F]{6}/g) || ['#FF2E88', '#7A4DFF'];
+  const colors = st.grad.match(/#[0-9a-fA-F]{6}/g) || ['#FF2E88', '#A78BFA'];
   g.addColorStop(0, colors[0]);
   g.addColorStop(1, colors[colors.length - 1]);
   ctx.fillStyle = g;
