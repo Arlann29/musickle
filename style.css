@@ -894,3 +894,90 @@ body.ready .vinyl-wrap{animation:heroIn 1s cubic-bezier(.22,.9,.32,1) .6s both, 
 .font-opt[data-font="lobster"] .fo-swatch{font-family:'Lobster',cursive;font-size:20px;}
 .font-opt[data-font="righteous"] .fo-swatch{font-family:'Righteous',cursive;font-size:15px;}
 .font-opt[data-font="spaceg"] .fo-swatch{font-family:'Space Grotesk',sans-serif;font-size:16px;}
+
+/* ============================================================
+   TAMPILAN MOBILE (HP) — bottom nav, sentuh ramah, grid 1 kolom
+   Konten & fitur tetap sama — hanya layout yang dioptimalkan.
+   ============================================================ */
+.mobile-bottom-nav{display:none;}
+@media(max-width:860px){
+  /* bottom nav */
+  .mobile-bottom-nav{
+    position:fixed;bottom:0;left:0;right:0;z-index:250;display:flex;
+    align-items:center;justify-content:space-around;
+    background:rgba(10,12,36,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    border-top:1px solid var(--line-strong);
+    padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));
+  }
+  .mb-item{
+    display:flex;flex-direction:column;align-items:center;gap:3px;
+    min-width:56px;min-height:48px;justify-content:center;
+    font-size:9.5px;font-weight:700;color:var(--ink-faint);letter-spacing:.04em;
+    border-radius:14px;transition:color .2s;
+  }
+  .mb-item .mb-ic{font-size:19px;filter:grayscale(.4);opacity:.75;transition:all .2s;}
+  .mb-item.active{color:var(--hot-pink);}
+  .mb-item.active .mb-ic{filter:none;opacity:1;transform:scale(1.12);}
+  .mb-cta{
+    width:58px;height:58px;border-radius:50%;border:none;cursor:pointer;
+    background:var(--grad-rainbow);font-size:24px;color:#0A0C24;
+    box-shadow:0 8px 24px rgba(255,46,136,.45);
+    transform:translateY(-16px);transition:transform .2s;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .mb-cta:active{transform:translateY(-12px) scale(.94);}
+  /* konten tidak ketutupan nav */
+  body{padding-bottom:86px;}
+  .now-playing{bottom:calc(76px + env(safe-area-inset-bottom,0px));}
+  .mk-toast{bottom:calc(130px + env(safe-area-inset-bottom,0px));}
+  /* sentuh ramah: tombol & input minimal 44px */
+  .btn,.chip,.icon-opt,.grad-opt,.motif-opt,.frame-opt,.font-opt,.pos-opt,.play-btn,.gallery-btn,.np-stop{min-height:44px;}
+  .icon-opt,.motif-opt,.frame-opt,.font-opt,.pos-opt{padding:10px 8px;}
+  input,select{min-height:48px;font-size:16px;}
+  /* picker card: 2 kolom rapi */
+  .grad-picker{grid-template-columns:repeat(auto-fill,minmax(56px,1fr));}
+  .motif-picker,.frame-picker,.font-picker{grid-template-columns:repeat(auto-fill,minmax(100px,1fr));}
+  .pos-picker{grid-template-columns:repeat(3,1fr);}
+  /* hero compact */
+  .hero{padding:96px 0 52px;}
+  .hero-title{font-size:clamp(40px,11vw,64px);}
+  .hero-actions{flex-direction:column;align-items:stretch;gap:12px;}
+  .hero-actions .btn{width:100%;justify-content:center;min-height:50px;}
+  .hero-stats{gap:14px;}
+  .hero-stats b{font-size:22px;}
+  .hero-stats span{font-size:9px;}
+  /* section & judul */
+  .section{padding:64px 0;}
+  .section-head{margin-bottom:32px;}
+  .section-title{font-size:clamp(28px,8vw,40px);}
+  .kicker{font-size:10px;}
+  /* proses (sudah stack) + head */
+  .process-head{padding-top:0;}
+  .process-head .section-sub{font-size:13px;}
+  /* card studio */
+  .card-studio{gap:34px;}
+  .card-actions .btn{min-height:50px;}
+  .form-block{margin-bottom:20px;}
+  .form-hint{font-size:12px;}
+  /* gallery */
+  .gallery-grid{grid-template-columns:repeat(2,1fr);gap:14px;}
+  .gallery-item .match-card{padding:20px;}
+  .gallery-item .mc-quote{font-size:17px;}
+  .gallery-item .mc-song{font-size:15px;}
+  /* trending & energi */
+  .trend-item{padding:14px 12px;gap:10px;}
+  .trend-rank{font-size:20px;}
+  .trend-delta{font-size:10px;}
+  .energy-console{padding:22px 16px;}
+  .energy-song{min-height:58px;}
+  /* footer */
+  .footer{padding:56px 0 110px;}
+  .footer-inner{flex-direction:column;gap:22px;text-align:center;}
+}
+@media(max-width:480px){
+  .gallery-grid{grid-template-columns:1fr;}
+  .hero-stats{flex-wrap:wrap;}
+  .marquee-track span{font-size:18px;padding:0 14px;}
+  .match-card{padding:22px;}
+  .mc-icon{font-size:52px;}
+}

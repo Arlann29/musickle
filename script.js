@@ -932,6 +932,37 @@ $('shareCardBtn').addEventListener('click', async () => {
 try { cards = JSON.parse(localStorage.getItem(LS_CARDS)) || []; } catch (e) { cards = []; }
 renderGallery();
 
+/* ============ BOTTOM NAV MOBILE (scroll spy + surprise) ============ */
+(function () {
+  const nav = $('mobileBottomNav');
+  if (!nav) return;
+  const items = nav.querySelectorAll('.mb-item');
+  const sections = ['top', 'sifat', 'trending', 'card'].map(id => document.getElementById(id)).filter(Boolean);
+  const setActive = (id) => {
+    items.forEach(a => a.classList.toggle('active', a.dataset.spy === id));
+  };
+  const onScroll = () => {
+    const pos = window.scrollY + window.innerHeight * 0.35;
+    let current = 'top';
+    sections.forEach(sec => { if (sec && sec.offsetTop <= pos) current = sec.id; });
+    if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 40) current = 'card';
+    setActive(current);
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+  const surprise = $('mbSurpriseBtn');
+  if (surprise) {
+    surprise.addEventListener('click', () => {
+      const random = SIFAT[Math.floor(Math.random() * SIFAT.length)];
+      selectedSifat = random.id;
+      renderSifat();
+      showSifatResult(random.id);
+      toast('🎲 Kamu dapet: ' + random.icon + ' ' + random.name + '!');
+      $('sifat').scrollIntoView({ behavior: 'smooth' });
+    });
+  }
+})();
+
 /* ============ PRELOADER ============ */
 (function () {
   const pre = $('preloader');
