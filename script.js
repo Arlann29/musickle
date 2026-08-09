@@ -583,3 +583,116 @@ $('shareCardBtn').addEventListener('click', async () => {
 /* init gallery */
 try { cards = JSON.parse(localStorage.getItem(LS_CARDS)) || []; } catch (e) { cards = []; }
 renderGallery();
+
+/* ============ PRELOADER ============ */
+(function () {
+  const pre = $('preloader');
+  const bar = $('preBar');
+  if (!pre) { document.body.classList.add('ready'); return; }
+  let p = 0;
+  const iv = setInterval(() => {
+    p += Math.random() * 22 + 8;
+    if (p >= 100) {
+      p = 100;
+      clearInterval(iv);
+      bar.style.width = '100%';
+      setTimeout(() => {
+        pre.classList.add('done');
+        document.body.classList.add('ready');
+        setTimeout(() => pre.remove(), 700);
+      }, 260);
+    } else {
+      bar.style.width = p + '%';
+    }
+  }, 130);
+})();
+
+/* ============ CUSTOM CURSOR ============ */
+(function () {
+  if (window.matchMedia('(pointer: coarse)').matches) return;
+  const dot = $('cursorDot');
+  const ring = $('cursorRing');
+  if (!dot || !ring) return;
+  let mx = -100, my = -100, rx = -100, ry = -100;
+  document.addEventListener('mousemove', (e) => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx + 'px';
+    dot.style.top = my + 'px';
+    const t = e.target.closest('a,button,.sifat-card,.artist-card,.play-btn,.grad-opt,.icon-opt,.trend-item,.energy-song,input,select');
+    ring.classList.toggle('hovering', !!t);
+  });
+  (function loop() {
+    rx += (mx - rx) * 0.16;
+    ry += (my - ry) * 0.16;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(loop);
+  })();
+  document.addEventListener('mouseleave', () => { ring.style.opacity = 0; dot.style.opacity = 0; });
+  document.addEventListener('mouseenter', () => { ring.style.opacity = 1; dot.style.opacity = 1; });
+})();
+
+/* ============ SCROLL PROGRESS ============ */
+(function () {
+  const bar = $('scrollProgress');
+  if (!bar) return;
+  const update = () => {
+    const h = document.documentElement;
+    const max = h.scrollHeight - h.clientHeight;
+    bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+
+/* ============ HORIZONTAL PROCESS SCROLL ============ */
+(function () {
+  const section = document.querySelector('.process-section');
+  const track = $('processTrack');
+  const pBar = $('processBar');
+  if (!section || !track) return;
+  const isMobile = () => window.innerWidth <= 860;
+
+  function setSectionHeight() {
+    if (isMobile()) { section.style.height = 'auto'; return; }
+    section.style.height = track.scrollWidth + 'px';
+  }
+  function updateProcess() {
+    if (isMobile()) { track.style.transform = ''; return; }
+    const rect = section.getBoundingClientRect();
+    const range = section.offsetHeight - window.innerHeight;
+    const progress = range > 0 ? Math.min(1, Math.max(0, -rect.top / range)) : 0;
+    const maxX = track.scrollWidth - window.innerWidth;
+    track.style.transform = 'translateX(' + (-maxX * progress) + 'px)';
+    if (pBar) pBar.style.width = (progress * 100) + '%';
+  }
+  setSectionHeight();
+  window.addEventListener('scroll', updateProcess, { passive: true });
+  window.addEventListener('resize', () => { setSectionHeight(); updateProcess(); });
+  updateProcess();
+})();
+
+/* ============ 3D TILT MATCH CARD ============ */
+(function () {
+  if (window.matchMedia('(pointer: coarse)').matches) return;
+  const card = $('matchCard');
+  if (!card) return;
+  card.classList.add('tilt');
+  const glow = document.createElement('div');
+  glow.className = 'mc-glow';
+  card.appendChild(glow);
+  const MAX = 9;
+  card.addEventListener('mousemove', (e) => {
+    const r = card.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width;
+    const py = (e.clientY - r.top) / r.height;
+    const rx = (0.5 - py) * MAX;
+    const ry = (px - 0.5) * MAX;
+    card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.02)`;
+    glow.style.setProperty('--gx', (px * 100) + '%');
+    glow.style.setProperty('--gy', (py * 100) + '%');
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) scale(1)';
+  });
+})();
