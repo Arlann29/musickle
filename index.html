@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#03051C">
+<title>MUSICKLE — Musik yang Kamu Banget</title>
+<meta name="description" content="Temukan musik yang cocok banget sama kepribadianmu: pilih sifat musik, eksplor penyanyi, trending, energi, dan bikin card kesesuaian lagumu sendiri.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="nav-inner wrap">
+    <a href="#top" class="logo">MUSICKLE<span class="logo-dot">.</span></a>
+    <nav class="nav-links">
+      <a href="#sifat">Sifat Musik</a>
+      <a href="#penyanyi">Penyanyi</a>
+      <a href="#trending">Trending</a>
+      <a href="#energy">Energy</a>
+      <a href="#card" class="nav-cta">Bikin Card Kamu</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Buka menu"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#sifat">Sifat Musik</a>
+    <a href="#penyanyi">Penyanyi</a>
+    <a href="#trending">Trending</a>
+    <a href="#energy">Energy</a>
+    <a href="#card">Bikin Card Kamu</a>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <div class="hero-glow hero-glow-1"></div>
+  <div class="hero-glow hero-glow-2"></div>
+  <div class="wrap hero-inner">
+    <span class="hero-badge">✦ 100% kamu banget</span>
+    <h1 class="hero-title">MUSIK YANG<br><span class="grad-text">KAMU BANGET</span></h1>
+    <p class="hero-sub">Bukan sekadar lagu. Musik yang pas banget sama suasana hati, kepribadian, dan momen kamu — dicariin lewat sifat, penyanyi, tren, sama energi. Ketemu yang paling cocok? <b>Bikin card-nya.</b></p>
+    <div class="hero-actions">
+      <a href="#sifat" class="btn btn-primary">Cari Vibe Kamu ↓</a>
+      <a href="#card" class="btn btn-ghost">Bikin Card Kesesuaian</a>
+      <button class="btn btn-ghost" id="surpriseBtn">🎲 Surprise Me</button>
+    </div>
+    <div class="hero-stats">
+      <div><b id="statSifat">8</b><span>sifat musik</span></div>
+      <div><b id="statArtis">12</b><span>penyanyi</span></div>
+      <div><b id="statLagu">40+</b><span>rekomendasi</span></div>
+      <div><b>∞</b><span>vibe combo</span></div>
+    </div>
+  </div>
+  <div class="hero-eq" aria-hidden="true">
+    <span style="--d:.0s"></span><span style="--d:.15s"></span><span style="--d:.3s"></span><span style="--d:.45s"></span><span style="--d:.6s"></span><span style="--d:.2s"></span><span style="--d:.5s"></span><span style="--d:.1s"></span><span style="--d:.35s"></span><span style="--d:.55s"></span><span style="--d:.25s"></span><span style="--d:.4s"></span>
+  </div>
+</section>
+
+<!-- ============ MARQUEE ============ -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span>MUSICKLE ✦ FIND YOUR VIBE ✦</span><span>MUSICKLE ✦ FIND YOUR VIBE ✦</span><span>MUSICKLE ✦ FIND YOUR VIBE ✦</span><span>MUSICKLE ✦ FIND YOUR VIBE ✦</span><span>MUSICKLE ✦ FIND YOUR VIBE ✦</span><span>MUSICKLE ✦ FIND YOUR VIBE ✦</span><span>MUSICKLE ✦ FIND YOUR VIBE ✦</span><span>MUSICKLE ✦ FIND YOUR VIBE ✦</span>
+  </div>
+</div>
+
+<!-- ============ SIFAT MUSIK ============ -->
+<section class="section" id="sifat">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">01 — Sifat Musik</span>
+      <h2 class="section-title">SIFAT MANA YANG <span class="grad-text">PALING KAMU?</span></h2>
+      <p class="section-sub">Pilih satu (atau beberapa) — musikle bakal nyariin lagu yang vibes-nya sama persis.</p>
+    </div>
+    <div class="sifat-grid" id="sifatGrid"></div>
+    <div class="sifat-result" id="sifatResult" hidden>
+      <div class="sifat-result-head">
+        <span class="sifat-result-icon" id="sifatResultIcon">🎧</span>
+        <div>
+          <span class="kicker">Vibe kamu terdeteksi</span>
+          <h3 id="sifatResultName">—</h3>
+        </div>
+        <button class="btn btn-ghost btn-sm" id="sifatReset">Ulangi</button>
+      </div>
+      <div class="sifat-result-body">
+        <p class="sifat-result-desc" id="sifatResultDesc">—</p>
+        <h4 class="sifat-result-label">REKOMENDASI BUAT KAMU</h4>
+        <div class="reco-list" id="sifatResultSongs"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PENYANYI ============ -->
+<section class="section section-alt" id="penyanyi">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">02 — Penyanyi</span>
+      <h2 class="section-title">SUARA YANG <span class="grad-text">NYANGKUT</span></h2>
+      <p class="section-sub">Eksplor penyanyi favorit berdasarkan vibe-nya — biar gak nyasar pas lagi bingung dengerin apa.</p>
+    </div>
+    <div class="chip-row" id="artistFilters"></div>
+    <div class="artist-grid" id="artistGrid"></div>
+  </div>
+</section>
+
+<!-- ============ TRENDING ============ -->
+<section class="section" id="trending">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">03 — Top Trending</span>
+      <h2 class="section-title">LAGU YANG LAGI <span class="grad-text">DIOMONGIN</span></h2>
+      <p class="section-sub">Ranking tren minggu ini — panas, naik, atau pelan-pelan memudar.</p>
+    </div>
+    <div class="trend-list" id="trendList"></div>
+  </div>
+</section>
+
+<!-- ============ ENERGY ============ -->
+<section class="section section-alt" id="energy">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">04 — Energy</span>
+      <h2 class="section-title">LOWER ATAU <span class="grad-text">HIGHER?</span></h2>
+      <p class="section-sub">Geser level energimu — dari lo-fi paling chill sampai paling gaspol.</p>
+    </div>
+    <div class="energy-console">
+      <div class="energy-labels">
+        <span class="energy-low">LOW ENERGY <small>chill · lo-fi · akustik</small></span>
+        <span class="energy-high">HIGH ENERGY <small>EDM · rock · workout</small></span>
+      </div>
+      <input type="range" id="energySlider" min="0" max="100" value="50" class="energy-slider">
+      <div class="energy-out">
+        <span class="energy-level-tag" id="energyLevelTag">SEIMBANG</span>
+        <div class="energy-songs" id="energySongs"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CARD KESESUAIAN ============ -->
+<section class="section" id="card">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">05 — Kesesuaian Card</span>
+      <h2 class="section-title">UDH NEMU LAGU YANG <span class="grad-text">KAMU BANGET?</span></h2>
+      <p class="section-sub">Bikin card-nya. Custom warnanya, vibes-nya, pesannya — terus simpen atau download buat dipajang.</p>
+    </div>
+
+    <div class="card-studio">
+      <!-- Preview -->
+      <div class="card-preview-col">
+        <div class="match-card" id="matchCard">
+          <div class="mc-top">
+            <span class="mc-badge">♪ MUSICKLE MATCH</span>
+            <span class="mc-num" id="mcNum">01</span>
+          </div>
+          <div class="mc-icon" id="mcIcon">🎧</div>
+          <div class="mc-quote" id="mcQuote">Lagu ini <b>kamu banget</b>.</div>
+          <div class="mc-divider"></div>
+          <div class="mc-song" id="mcSong">Judul Lagu</div>
+          <div class="mc-artist" id="mcArtist">Nama Penyanyi</div>
+          <div class="mc-tags" id="mcTags"><span class="mc-tag">vibe</span></div>
+          <div class="mc-from">dibuat oleh <b id="mcName">kamu</b> · musikle</div>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-primary" id="saveCardBtn">💾 Simpan Card</button>
+          <button class="btn btn-ghost" id="downloadCardBtn">⬇ Download PNG</button>
+          <button class="btn btn-ghost" id="shareCardBtn">📤 Bagikan</button>
+        </div>
+      </div>
+
+      <!-- Form custom -->
+      <div class="card-form-col">
+        <h3 class="form-title">CUSTOM CARD KAMU</h3>
+        <div class="form-grid">
+          <label>Nama kamu
+            <input type="text" id="cfName" placeholder="mis. Arlan" maxlength="20">
+          </label>
+          <label>Judul lagu
+            <input type="text" id="cfSong" placeholder="mis. To the Bone" maxlength="30">
+          </label>
+          <label>Penyanyi
+            <input type="text" id="cfArtist" placeholder="mis. Pamungkas" maxlength="30">
+          </label>
+          <label>Vibe / sifat
+            <select id="cfVibe"></select>
+          </label>
+          <label class="full">Pesan singkat
+            <input type="text" id="cfQuote" placeholder='mis. "Lagu ini soundtrack hidupku"' maxlength="48">
+          </label>
+        </div>
+        <div class="form-block">
+          <span class="form-label">Gradient card</span>
+          <div class="grad-picker" id="gradPicker"></div>
+        </div>
+        <div class="form-block">
+          <span class="form-label">Ikon</span>
+          <div class="icon-picker" id="iconPicker"></div>
+        </div>
+        <p class="form-hint">Card tersimpan otomatis di browser kamu (localStorage) — bisa diedit & dihapus kapan aja.</p>
+      </div>
+    </div>
+
+    <!-- Gallery -->
+    <div class="gallery" id="cardGallery">
+      <div class="gallery-head">
+        <h3 class="form-title">CARD KAMU <span id="galleryCount">(0)</span></h3>
+        <button class="btn btn-ghost btn-sm" id="clearCardsBtn" hidden>Hapus semua</button>
+      </div>
+      <div class="gallery-grid" id="galleryGrid"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <a href="#top" class="logo">MUSICKLE<span class="logo-dot">.</span></a>
+    <p class="footer-note">Dibuat buat kamu yang lagi nyari musik — biar ketemu yang <b>kamu banget</b>. Rekomendasi di halaman ini contoh/demo, bukan data resmi chart.</p>
+    <div class="footer-links">
+      <a href="#sifat">Sifat Musik</a><a href="#penyanyi">Penyanyi</a><a href="#trending">Trending</a><a href="#energy">Energy</a><a href="#card">Card</a>
+    </div>
+    <span class="footer-copy">© 2026 MUSICKLE — keep vibin' ✦</span>
+  </div>
+</footer>
+
+<!-- ============ PLAYER BAR (preview 30 detik) ============ -->
+<div class="now-playing" id="nowPlaying" hidden>
+  <span class="np-eq" aria-hidden="true"><i></i><i></i><i></i></span>
+  <span class="np-text"><b id="npTitle">—</b> <span id="npSub">preview 30 detik</span></span>
+  <button class="np-stop" id="npStop" aria-label="Berhenti">✕</button>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
