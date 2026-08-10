@@ -187,6 +187,47 @@ const POSITIONS = [
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
+/* ---------- cover lagu (iTunes artwork) — antrean biar tidak banjir API ---------- */
+const coverCache = {};
+const coverTasks = [];
+let coverBusy = 0;
+async function fetchCover(title, artist) {
+  const key = 'cover|' + (title + '|' + artist).toLowerCase();
+  if (coverCache[key] !== undefined) return coverCache[key];
+  try {
+    const res = await fetch('https://itunes.apple.com/search?term=' + encodeURIComponent(title + ' ' + artist)
+      + '&media=music&entity=song&limit=1&country=ID');
+    const data = await res.json();
+    const hit = (data.results || [])[0];
+    coverCache[key] = hit ? hit.artworkUrl100 : null;
+    return coverCache[key];
+  } catch (e) {
+    coverCache[key] = null;
+    return null;
+  }
+}
+function applyCover(imgEl, title, artist) {
+  if (!imgEl || !title) return;
+  const cur = imgEl.getAttribute('src');
+  if (cur && cur.startsWith('http') && !cur.includes('data:')) { imgEl.classList.add('loaded'); return; }
+  coverTasks.push({ imgEl, title, artist });
+  pumpCovers();
+}
+function pumpCovers() {
+  while (coverBusy < 5 && coverTasks.length) {
+    const t = coverTasks.shift();
+    coverBusy++;
+    fetchCover(t.title, t.artist).then(url => {
+      coverBusy--;
+      if (url && t.imgEl.isConnected) {
+        t.imgEl.src = url;
+        t.imgEl.classList.add('loaded');
+      }
+      pumpCovers();
+    });
+  }
+}
+
 /* ============ NAV MOBILE ============ */
 $('burger').addEventListener('click', () => $('mobileMenu').classList.toggle('open'));
 document.querySelectorAll('#mobileMenu a').forEach(a => a.addEventListener('click', () => $('mobileMenu').classList.remove('open')));
@@ -285,12 +326,16 @@ function renderArtists() {
     : ARTIS.filter(a => a.genre.includes(artistFilter));
   artistGrid.innerHTML = list.map((a, i) => `
     <div class="artist-card" data-reveal style="--stagger:${i % 4}">
-      <div class="artist-avatar" style="background:${a.grad}">${esc(a.name[0])}</div>
+      <div class="artist-avatar" style="background:${a.grad}">
+        <span class="art-init">${esc(a.name[0])}</span>
+        <img class="art-img" alt="" loading="lazy" data-art-name="${esc(a.name)}" data-art-top="${esc(a.top)}">
+      </div>
       <div class="artist-name">${esc(a.name)}</div>
       <div class="artist-genre">${esc(a.genre)}</div>
       <div class="artist-tags">${a.tags.map(t => `<span>${t}</span>`).join('')}</div>
       <div class="artist-top">Top: <b>${esc(a.top)}</b></div>
     </div>`).join('');
+  list.forEach(a => applyCover(artistGrid.querySelector(`.art-img[data-art-name="${esc(a.name)}"]`), a.top, a.name));
 }
 renderArtistFilters();
 renderArtists();
@@ -306,6 +351,7 @@ artistFilters.addEventListener('click', (e) => {
 const fmtDaily = (n) => (n >= 1e6 ? (n / 1e6).toFixed(1).replace('.', ',') + 'M' : Math.round(n / 1e3) + 'K');
 $('trendList').innerHTML = TRENDING.map((t, i) => `
   <div class="trend-item" data-reveal style="--stagger:${i % 4}">
+    <img class="trend-cover" alt="" loading="lazy" data-cov-title="${esc(t.song)}" data-cov-artist="${esc(t.artist)}">
     <span class="trend-rank ${i < 3 ? 'top3' : ''}">${String(i + 1).padStart(2, '0')}</span>
     <div class="trend-info">
       <div class="trend-song">${esc(t.song)}</div>
@@ -319,6 +365,7 @@ $('trendList').innerHTML = TRENDING.map((t, i) => `
     <button class="t-add" data-add-play="${esc(t.song)}" data-add-artist="${esc(t.artist)}" title="Tambah ke playlist">+</button>
     <button class="play-btn" data-play="${esc(t.song)}" data-artist="${esc(t.artist)}" title="Preview 30 detik">▶</button>
   </div>`).join('');
+document.querySelectorAll('#trendList .trend-cover').forEach(el => applyCover(el, el.dataset.covTitle, el.dataset.covArtist));
 
 /* ============ 04 — ENERGY ============ */
 const energySlider = $('energySlider');
@@ -619,7 +666,7 @@ async function findPreview(title, artist) {
     const res = await fetch(url);
     const data = await res.json();
     const hit = (data.results || []).find(r => r.previewUrl) || null;
-    previewCache[key] = hit ? { url: hit.previewUrl, name: hit.trackName, artist: hit.artistName } : null;
+    previewCache[key] = hit ? { url: hit.previewUrl, name: hit.trackName, artist: hit.artistName, cover: hit.artworkUrl100 } : null;
     return previewCache[key];
   } catch (e) {
     previewCache[key] = null;
@@ -686,6 +733,7 @@ async function loadTrack(pos) {
       return;
     }
     t.url = hit.url;
+    t.cover = hit.cover || t.cover || '';
   }
   player.seqPos = pos;
   audio.src = t.url;
@@ -997,7 +1045,7 @@ function renderPlaylistTracks() {
   $('plEmpty').hidden = pl.tracks.length > 0;
   $('plTracks').innerHTML = pl.tracks.map((t, i) => `
     <div class="pl-track">
-      <img class="s-cover" src="${esc(t.cover || '')}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">
+      <img class="s-cover" src="${esc(t.cover || '')}" alt="" loading="lazy" data-cov-title="${esc(t.title)}" data-cov-artist="${esc(t.artist)}" onerror="this.style.visibility='hidden'">
       <div class="s-info">
         <div class="s-song">${esc(t.title)}</div>
         <div class="s-artist">${esc(t.artist)}</div>
@@ -1005,6 +1053,7 @@ function renderPlaylistTracks() {
       <button class="pl-play" data-pl-play="${i}" title="Putar">▶</button>
       <button class="pl-del" data-pl-del-track="${i}" title="Hapus dari playlist">✕</button>
     </div>`).join('');
+  document.querySelectorAll('#plTracks .s-cover').forEach(el => applyCover(el, el.dataset.covTitle, el.dataset.covArtist));
 }
 $('plList').addEventListener('click', (e) => {
   const del = e.target.closest('[data-pl-del]');
@@ -1160,7 +1209,8 @@ function renderSuggest() {
   $('suggestGrid').innerHTML = tracks.map((t, i) => `
     <div class="sg-card" style="--sg-grad:${SG_GRADS[i % SG_GRADS.length]}">
       <div class="sg-cover">
-        ${t.cover ? `<img src="${esc(t.cover)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">` : '<span class="sg-emoji">🎵</span>'}
+        <span class="sg-emoji">🎵</span>
+        <img class="sg-cover-img" alt="" loading="lazy" data-cov-title="${esc(t.title)}" data-cov-artist="${esc(t.artist)}" src="${esc(t.cover || '')}">
       </div>
       <div class="sg-info">
         <div class="sg-song">${esc(t.title)}</div>
@@ -1171,6 +1221,7 @@ function renderSuggest() {
         <button class="sg-add" data-sg-title="${esc(t.title)}" data-sg-artist="${esc(t.artist)}" data-sg-url="${esc(t.url)}" title="Tambah ke playlist">+ Pl</button>
       </div>
     </div>`).join('');
+  document.querySelectorAll('#suggestGrid .sg-cover-img').forEach(el => applyCover(el, el.dataset.covTitle, el.dataset.covArtist));
 }
 $('suggestGrid').addEventListener('click', (e) => {
   const play = e.target.closest('.sg-play');

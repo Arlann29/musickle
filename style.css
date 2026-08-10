@@ -255,8 +255,11 @@ section[id]{scroll-margin-top:80px;}
 .artist-card:hover{transform:translateY(-5px);border-color:var(--line-strong);box-shadow:0 18px 44px rgba(0,0,0,.35);}
 .artist-avatar{
   width:64px;height:64px;border-radius:18px;font-family:var(--font-display);font-size:26px;
-  display:flex;align-items:center;justify-content:center;color:#fff;
+  display:flex;align-items:center;justify-content:center;color:#fff;position:relative;overflow:hidden;
 }
+.art-init{position:relative;z-index:1;}
+.art-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .35s;z-index:2;}
+.art-img.loaded{opacity:1;}
 .artist-name{font-family:var(--font-display);font-size:19px;text-transform:uppercase;letter-spacing:.02em;margin-top:16px;}
 .artist-genre{font-size:12px;color:var(--card-ink-faint);font-weight:600;margin-top:3px;text-transform:uppercase;letter-spacing:.08em;}
 .artist-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px;}
@@ -275,8 +278,13 @@ section[id]{scroll-margin-top:80px;}
   border:1px solid var(--card-line);color:var(--card-ink);border-radius:16px;padding:16px 22px;transition:all .2s;
 }
 .trend-item:hover{border-color:var(--hot-pink);transform:translateX(5px);}
+.trend-cover{
+  width:44px;height:44px;border-radius:10px;object-fit:cover;flex-shrink:0;
+  background:linear-gradient(135deg,var(--bg-3),var(--bg-2));visibility:hidden;
+}
+.trend-cover.loaded{visibility:visible;}
 .trend-rank{
-  font-family:var(--font-display);font-size:30px;width:52px;flex-shrink:0;text-align:center;
+  font-family:var(--font-display);font-size:28px;width:46px;flex-shrink:0;text-align:center;color:var(--card-ink-faint);
 }
 .trend-rank.top3{color:var(--hot-yellow);}
 .trend-info{flex:1;min-width:0;}
@@ -610,8 +618,10 @@ section[id]{scroll-margin-top:80px;}
 }
 .sg-card:hover{transform:translateY(-3px);box-shadow:0 16px 34px rgba(11,16,38,.14);border-color:var(--card-line-strong);}
 .sg-cover{
-  height:72px;background:var(--sg-grad);display:flex;align-items:center;justify-content:center;
+  height:72px;background:var(--sg-grad);display:flex;align-items:center;justify-content:center;position:relative;
 }
+.sg-cover-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .35s;}
+.sg-cover-img.loaded{opacity:1;}
 .sg-cover img{width:100%;height:100%;object-fit:cover;display:block;}
 .sg-emoji{font-size:28px;opacity:.85;}
 .sg-info{padding:10px 12px 4px;}
@@ -1194,7 +1204,8 @@ body.ready .vinyl-wrap{animation:heroIn 1s cubic-bezier(.22,.9,.32,1) .6s both, 
   .gallery-item .mc-song{font-size:15px;}
   /* trending & energi */
   .trend-item{padding:14px 12px;gap:10px;}
-  .trend-rank{font-size:20px;}
+  .trend-rank{font-size:20px;width:34px;}
+  .trend-cover{width:36px;height:36px;border-radius:8px;}
   .trend-daily{font-size:10px;}
   .energy-console{padding:22px 16px;}
   .energy-song{min-height:58px;}
