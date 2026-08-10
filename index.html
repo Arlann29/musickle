@@ -34,6 +34,7 @@
       <a href="#penyanyi">Penyanyi</a>
       <a href="#trending">Trending</a>
       <a href="#energy">Energy</a>
+      <a href="#cari">Cari Lagu</a>
       <a href="#card" class="nav-cta">Bikin Card Kamu</a>
     </nav>
     <button class="burger" id="burger" aria-label="Buka menu"><span></span><span></span><span></span></button>
@@ -43,6 +44,7 @@
     <a href="#penyanyi">Penyanyi</a>
     <a href="#trending">Trending</a>
     <a href="#energy">Energy</a>
+    <a href="#cari">Cari Lagu</a>
     <a href="#card">Bikin Card Kamu</a>
   </div>
 </header>
@@ -311,13 +313,30 @@
   </div>
 </section>
 
+<!-- ============ 06 — CARI LAGU ============ -->
+<section class="search-section" id="cari">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">06 — Cari Lagu</span>
+      <h2 class="section-title">NYARI LAGU <span class="grad-text">KESUKAANMU?</span></h2>
+      <p class="section-sub">Ketik judul atau nama penyanyi — nyari dari jutaan lagu (data iTunes). Preview 30 detik dulu, yang cocok langsung dipasang ke card kamu.</p>
+    </div>
+    <form class="search-bar" id="searchForm" autocomplete="off">
+      <input type="search" id="searchInput" placeholder="Cari lagu / artis… (mis. To the Bone, Dangdut, Ed Sheeran, Pamungkas)" aria-label="Cari lagu">
+      <button type="submit" class="btn-search">🔍 Cari</button>
+    </form>
+    <p class="search-meta" id="searchMeta"></p>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+</section>
+
 <!-- ============ FOOTER ============ -->
 <footer class="footer">
   <div class="wrap footer-inner">
     <a href="#top" class="logo">MUSICKLE<span class="logo-dot">.</span></a>
     <p class="footer-note">Dibuat buat kamu yang lagi nyari musik — biar ketemu yang <b>kamu banget</b>. Rekomendasi di halaman ini contoh/demo, bukan data resmi chart.</p>
     <div class="footer-links">
-      <a href="#sifat">Sifat Musik</a><a href="#penyanyi">Penyanyi</a><a href="#trending">Trending</a><a href="#energy">Energy</a><a href="#card">Card</a>
+      <a href="#sifat">Sifat Musik</a><a href="#penyanyi">Penyanyi</a><a href="#trending">Trending</a><a href="#energy">Energy</a><a href="#cari">Cari Lagu</a><a href="#card">Card</a>
     </div>
     <span class="footer-copy">© 2026 MUSICKLE — keep vibin' ✦</span>
   </div>
@@ -327,6 +346,7 @@
 <nav class="mobile-bottom-nav" id="mobileBottomNav" aria-label="Navigasi bawah">
   <a href="#top" class="mb-item" data-spy="top"><span class="mb-ic">🏠</span><span class="mb-lb">Beranda</span></a>
   <a href="#sifat" class="mb-item" data-spy="sifat"><span class="mb-ic">🎭</span><span class="mb-lb">Sifat</span></a>
+  <a href="#cari" class="mb-item" data-spy="cari"><span class="mb-ic">🔍</span><span class="mb-lb">Cari</span></a>
   <button class="mb-cta" id="mbSurpriseBtn" aria-label="Surprise Me">🎲</button>
   <a href="#trending" class="mb-item" data-spy="trending"><span class="mb-ic">🔥</span><span class="mb-lb">Tren</span></a>
   <a href="#card" class="mb-item" data-spy="card"><span class="mb-ic">🎴</span><span class="mb-lb">Card</span></a>

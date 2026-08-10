@@ -432,6 +432,63 @@ section[id]{scroll-margin-top:80px;}
   text-align:center;color:var(--card-ink-faint);font-size:13.5px;font-weight:500;
 }
 
+/* ============ 06 — CARI LAGU ============ */
+.search-section{padding:60px 24px 80px;max-width:1000px;margin:0 auto;}
+.search-bar{
+  display:flex;gap:10px;margin-top:34px;background:var(--card);
+  border:1px solid var(--card-line);border-radius:99px;padding:6px 6px 6px 22px;
+  box-shadow:0 18px 40px rgba(11,16,38,.10);transition:box-shadow .25s,border-color .25s;
+}
+.search-bar:focus-within{border-color:var(--hot-pink);box-shadow:0 18px 44px rgba(232,146,90,.22);}
+.search-bar input{
+  flex:1;border:none;outline:none;background:transparent;font-family:var(--font-body);
+  font-size:14.5px;color:var(--card-ink);min-width:0;
+}
+.search-bar input::placeholder{color:var(--card-ink-faint);}
+.btn-search{
+  font-family:var(--font-body);font-size:14px;font-weight:700;color:#fff;border:none;
+  background:linear-gradient(135deg,var(--hot-pink),var(--plum));
+  padding:13px 26px;border-radius:99px;cursor:pointer;transition:transform .2s,box-shadow .2s;
+  box-shadow:0 10px 22px rgba(232,146,90,.35);flex-shrink:0;
+}
+.btn-search:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(232,146,90,.45);}
+.btn-search:active{transform:scale(.96);}
+.search-meta{font-size:12.5px;color:var(--card-ink-faint);margin-top:16px;min-height:18px;font-weight:600;letter-spacing:.02em;}
+.search-results{display:flex;flex-direction:column;gap:10px;margin-top:8px;}
+.search-item{
+  display:flex;align-items:center;gap:14px;background:var(--card);
+  border:1px solid var(--card-line);border-radius:16px;padding:12px 14px;
+  transition:transform .2s,border-color .2s,box-shadow .2s;
+}
+.search-item:hover{transform:translateY(-2px);border-color:var(--card-line-strong);box-shadow:0 14px 30px rgba(11,16,38,.10);}
+.s-cover{
+  width:52px;height:52px;border-radius:10px;object-fit:cover;flex-shrink:0;
+  background:linear-gradient(135deg,var(--bg-3),var(--bg-2));
+}
+.s-info{flex:1;min-width:0;}
+.s-song{font-weight:700;font-size:14.5px;color:var(--card-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.s-artist{font-size:12px;color:var(--card-ink-dim);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.s-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.s-use{
+  font-family:var(--font-body);font-size:12px;font-weight:700;color:var(--hot-pink);
+  background:rgba(232,146,90,.12);border:1.5px solid rgba(232,146,90,.35);
+  padding:8px 14px;border-radius:99px;cursor:pointer;transition:all .2s;
+}
+.s-use:hover{background:var(--hot-pink);color:#fff;}
+.search-empty{
+  text-align:center;padding:44px 20px;color:var(--card-ink-faint);font-size:14px;
+  background:var(--card);border:1.5px dashed var(--card-line-strong);border-radius:16px;
+}
+@media(max-width:760px){
+  .search-bar{border-radius:22px;flex-direction:column;padding:10px;gap:8px;}
+  .search-bar input{padding:10px 12px;font-size:14px;border-radius:14px;background:var(--field);}
+  .btn-search{width:100%;}
+  .s-actions{gap:6px;}
+  .s-use{padding:8px 10px;font-size:11px;}
+  .search-item{gap:10px;padding:10px;}
+  .s-cover{width:46px;height:46px;}
+}
+
 /* ---------- footer ---------- */
 .footer{
   border-top:1px solid var(--line);background:var(--bg-2);padding:56px 0 40px;

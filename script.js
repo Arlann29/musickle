@@ -648,9 +648,91 @@ async function togglePreview(btn) {
 }
 audio.addEventListener('ended', () => { resetPlayBtns(); nowPlaying.hidden = true; currentPlayKey = null; });
 
+/* ============ 06 — CARI LAGU (iTunes Search API) ============ */
+const searchForm = $('searchForm');
+const searchInput = $('searchInput');
+const searchMeta = $('searchMeta');
+const searchResults = $('searchResults');
+
+function playDirect(url, name, artist) {
+  audio.pause();
+  resetPlayBtns();
+  audio.src = url;
+  audio.play().catch(() => {});
+  currentPlayKey = 'direct|' + name + '|' + artist;
+  npTitle.textContent = name + ' — ' + artist;
+  nowPlaying.hidden = false;
+  document.querySelectorAll('.s-item-play').forEach(b => {
+    const on = b.dataset.url === url;
+    b.textContent = on ? '⏸' : '▶';
+    b.classList.toggle('playing', on);
+  });
+}
+
+async function runSearch(q) {
+  const term = q.trim();
+  if (!term) return;
+  searchMeta.textContent = 'Nyari "' + term + '"… 🔍';
+  searchResults.innerHTML = '<div class="search-empty">Lagi nyari di jutaan lagu…</div>';
+  try {
+    const res = await fetch('https://itunes.apple.com/search?term=' + encodeURIComponent(term)
+      + '&media=music&entity=song&limit=12&country=ID');
+    const data = await res.json();
+    const hits = (data.results || []).filter(r => r.previewUrl);
+    if (!hits.length) {
+      searchMeta.textContent = '';
+      searchResults.innerHTML = '<div class="search-empty">Gak ketemu buat "' + esc(term) + '" 😢 Coba judul atau artis lain, ya.</div>';
+      return;
+    }
+    searchMeta.textContent = hits.length + ' hasil buat "' + esc(term) + '"';
+    searchResults.innerHTML = hits.map((r, i) => `
+      <div class="search-item" data-reveal style="--stagger:${i % 4}">
+        <img class="s-cover" src="${esc(r.artworkUrl60)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">
+        <div class="s-info">
+          <div class="s-song">${esc(r.trackName)}</div>
+          <div class="s-artist">${esc(r.artistName)}${r.collectionName ? ' · ' + esc(r.collectionName) : ''}</div>
+        </div>
+        <div class="s-actions">
+          <button class="play-btn s-item-play" data-url="${esc(r.previewUrl)}" data-name="${esc(r.trackName)}" data-artist="${esc(r.artistName)}" title="Preview 30 detik">▶</button>
+          <button class="s-use" data-song="${esc(r.trackName)}" data-artist="${esc(r.artistName)}" title="Pakai di card">+ Card</button>
+        </div>
+      </div>`).join('');
+    scanReveals();
+  } catch (e) {
+    searchMeta.textContent = '';
+    searchResults.innerHTML = '<div class="search-empty">Gagal nyari 😢 Cek koneksi internet & coba lagi.</div>';
+  }
+}
+
+searchForm.addEventListener('submit', (e) => { e.preventDefault(); runSearch(searchInput.value); });
+searchResults.addEventListener('click', (e) => {
+  const play = e.target.closest('.s-item-play');
+  if (play) {
+    if (play.classList.contains('playing')) {
+      audio.pause();
+      resetPlayBtns();
+      nowPlaying.hidden = true;
+      currentPlayKey = null;
+      play.textContent = '▶';
+      play.classList.remove('playing');
+      return;
+    }
+    playDirect(play.dataset.url, play.dataset.name, play.dataset.artist);
+    return;
+  }
+  const use = e.target.closest('.s-use');
+  if (use) {
+    $('cfSong').value = use.dataset.song;
+    $('cfArtist').value = use.dataset.artist;
+    fillCard(cardState());
+    toast('Lagu "' + use.dataset.song + '" masuk ke card kamu 🎴');
+    document.getElementById('card').scrollIntoView({ behavior: 'smooth' });
+  }
+});
+
 document.addEventListener('click', (e) => {
   const btn = e.target.closest('.play-btn');
-  if (btn) togglePreview(btn);
+  if (btn && !btn.classList.contains('s-item-play')) togglePreview(btn);
 });
 $('npStop').addEventListener('click', () => {
   audio.pause();
