@@ -219,9 +219,13 @@ function pumpCovers() {
     coverBusy++;
     fetchCover(t.title, t.artist).then(url => {
       coverBusy--;
-      if (url && t.imgEl.isConnected) {
-        t.imgEl.src = url;
-        t.imgEl.classList.add('loaded');
+      if (t.imgEl.isConnected) {
+        if (url) {
+          t.imgEl.src = url;
+          t.imgEl.classList.add('loaded');
+        } else {
+          t.imgEl.style.display = 'none';
+        }
       }
       pumpCovers();
     });
@@ -880,7 +884,7 @@ async function runSearch(q) {
     searchMeta.textContent = hits.length + ' hasil buat "' + esc(term) + '"';
     searchResults.innerHTML = hits.map((r, i) => `
       <div class="search-item" data-reveal style="--stagger:${i % 4}">
-        <img class="s-cover" src="${esc(r.artworkUrl60)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">
+        <img class="s-cover" src="${esc(r.artworkUrl60)}" alt="" loading="lazy" onerror="this.style.display='none'">
         <div class="s-info">
           <div class="s-song">${esc(r.trackName)}</div>
           <div class="s-artist">${esc(r.artistName)}${r.collectionName ? ' · ' + esc(r.collectionName) : ''}</div>
@@ -1045,7 +1049,7 @@ function renderPlaylistTracks() {
   $('plEmpty').hidden = pl.tracks.length > 0;
   $('plTracks').innerHTML = pl.tracks.map((t, i) => `
     <div class="pl-track">
-      <img class="s-cover" src="${esc(t.cover || '')}" alt="" loading="lazy" data-cov-title="${esc(t.title)}" data-cov-artist="${esc(t.artist)}" onerror="this.style.visibility='hidden'">
+      <img class="s-cover" src="${esc(t.cover || '')}" alt="" loading="lazy" data-cov-title="${esc(t.title)}" data-cov-artist="${esc(t.artist)}" onerror="this.style.display='none'">
       <div class="s-info">
         <div class="s-song">${esc(t.title)}</div>
         <div class="s-artist">${esc(t.artist)}</div>
