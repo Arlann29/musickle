@@ -316,6 +316,7 @@ $('trendList').innerHTML = TRENDING.map((t, i) => `
       <div class="trend-bar"><i style="width:${t.mood}%"></i></div>
     </div>
     <span class="trend-daily">${fmtDaily(t.daily)}<small>/hari</small></span>
+    <button class="t-add" data-add-play="${esc(t.song)}" data-add-artist="${esc(t.artist)}" title="Tambah ke playlist">+</button>
     <button class="play-btn" data-play="${esc(t.song)}" data-artist="${esc(t.artist)}" title="Preview 30 detik">▶</button>
   </div>`).join('');
 
@@ -864,13 +865,12 @@ searchResults.addEventListener('click', (e) => {
   }
   const addPl = e.target.closest('.s-pl');
   if (addPl) {
-    const ok = addToPlaylist({
+    openPlPick({
       title: addPl.dataset.plSong,
       artist: addPl.dataset.plArtist,
       url: addPl.dataset.plUrl,
       cover: addPl.dataset.plCover,
     });
-    toast(ok ? 'Masuk playlist "' + getActivePl().name + '" 🎵' : 'Lagu udah ada di playlist / belum ada playlist');
     return;
   }
   const use = e.target.closest('.s-use');
@@ -884,6 +884,15 @@ searchResults.addEventListener('click', (e) => {
 });
 
 document.addEventListener('click', (e) => {
+  const addT = e.target.closest('.t-add');
+  if (addT) {
+    const title = addT.dataset.addPlay, artist = addT.dataset.addArtist;
+    findPreview(title, artist).then(hit => {
+      if (!hit) { toast('Gak ketemu preview buat "' + title + '" 😢'); return; }
+      openPlPick({ title: hit.name, artist: hit.artist, url: hit.url, cover: '' });
+    });
+    return;
+  }
   const btn = e.target.closest('.play-btn');
   if (btn && !btn.classList.contains('s-item-play')) togglePreview(btn);
 });
@@ -1046,6 +1055,52 @@ $('plShufflePlay').addEventListener('click', () => {
 });
 loadPlaylists();
 renderPlaylists();
+
+/* ============ MODAL PILIH PLAYLIST ============ */
+const plPickModal = $('plPickModal');
+let pendingTrack = null;
+function openPlPick(track) {
+  if (!track || !track.title) return;
+  pendingTrack = track;
+  $('plPickList').innerHTML = playlists.map(p => `
+    <button class="pl-pick-item" data-pl-pick="${p.id}">
+      <span class="pl-ic">${p.emoji || '🎵'}</span>
+      <b>${esc(p.name)}</b>
+      <span>${p.tracks.length} lagu</span>
+      <span class="pl-pick-add">＋</span>
+    </button>`).join('');
+  plPickModal.hidden = false;
+}
+function closePlPick() { plPickModal.hidden = true; pendingTrack = null; }
+$('plPickClose').addEventListener('click', closePlPick);
+plPickModal.addEventListener('click', (e) => { if (e.target === plPickModal) closePlPick(); });
+$('plPickList').addEventListener('click', (e) => {
+  const item = e.target.closest('[data-pl-pick]');
+  if (!item || !pendingTrack) return;
+  const pl = playlists.find(p => p.id === item.dataset.plPick);
+  const ok = addToPlaylist(pendingTrack, item.dataset.plPick);
+  if (ok) {
+    toast('Masuk playlist "' + pl.name + '" 🎵');
+    closePlPick();
+  } else {
+    toast('Lagu udah ada di playlist itu 😉');
+  }
+});
+$('plPickNew').addEventListener('click', () => {
+  const name = prompt('Nama playlist baru:') || '';
+  if (!name.trim()) return;
+  playlists.unshift({ id: 'pl-' + Date.now(), name: name.trim(), emoji: '🎵', tracks: [] });
+  activePlId = playlists[0].id;
+  savePlaylists();
+  renderPlaylists();
+  if (pendingTrack) {
+    addToPlaylist(pendingTrack, playlists[0].id);
+    toast('Playlist "' + name.trim() + '" dibuat & lagu masuk 🎵');
+    closePlPick();
+  } else {
+    toast('Playlist "' + name.trim() + '" dibuat 🎵');
+  }
+});
 
 /* ============ PWA — service worker (installable, offline) ============ */
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {

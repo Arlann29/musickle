@@ -383,6 +383,18 @@
   <a href="#card" class="mb-item" data-spy="card"><span class="mb-ic">🎴</span><span class="mb-lb">Card</span></a>
 </nav>
 
+<!-- ============ MODAL PILIH PLAYLIST ============ -->
+<div class="pl-pick-modal" id="plPickModal" hidden>
+  <div class="pl-pick-card">
+    <div class="pl-pick-head">
+      <b>Masuk ke playlist mana? 🎵</b>
+      <button class="pl-pick-close" id="plPickClose" aria-label="Tutup">✕</button>
+    </div>
+    <div class="pl-pick-list" id="plPickList"></div>
+    <button class="pl-pick-new" id="plPickNew">+ Playlist baru</button>
+  </div>
+</div>
+
 <!-- ============ PLAYER BAR (Spotify-style) ============ -->
 <div class="now-playing" id="nowPlaying" hidden>
   <img id="npCover" class="np-cover" alt="" onerror="this.style.visibility='hidden'">
