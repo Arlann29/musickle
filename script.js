@@ -820,8 +820,8 @@ async function runSearch(q) {
         </div>
         <div class="s-actions">
           <button class="play-btn s-item-play" data-url="${esc(r.previewUrl)}" data-name="${esc(r.trackName)}" data-artist="${esc(r.artistName)}" title="Preview 30 detik">▶</button>
-          <button class="s-use" data-song="${esc(r.trackName)}" data-artist="${esc(r.artistName)}" title="Pakai di card">+ Card</button>
-          <button class="s-use s-pl" data-pl-song="${esc(r.trackName)}" data-pl-artist="${esc(r.artistName)}" data-pl-url="${esc(r.previewUrl)}" data-pl-cover="${esc(r.artworkUrl100 || '')}" title="Tambah ke playlist">+ Pl</button>
+          <button class="s-use" data-song="${esc(r.trackName)}" data-artist="${esc(r.artistName)}" title="Pakai di card">+Card</button>
+          <button class="s-use s-pl" data-pl-song="${esc(r.trackName)}" data-pl-artist="${esc(r.artistName)}" data-pl-url="${esc(r.previewUrl)}" data-pl-cover="${esc(r.artworkUrl100 || '')}" title="Tambah ke playlist">+Pl</button>
         </div>
       </div>`).join('');
     scanReveals();
