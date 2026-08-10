@@ -785,6 +785,7 @@ async function togglePreview(btn) {
   player.plId = null;
   player.seq = [0];
   loadTrack(0);
+  bumpLiked({ title: hit.name, artist: hit.artist, url: hit.url, cover: '' });
   resetPlayBtns();
   btn.textContent = '⏸';
   btn.classList.add('playing');
@@ -804,6 +805,7 @@ function playDirect(url, name, artist) {
   currentPlayKey = 'direct|' + name + '|' + artist;
   npTitle.textContent = name + ' — ' + artist;
   nowPlaying.hidden = false;
+  bumpLiked({ title: name, artist, url, cover: '' });
   document.querySelectorAll('.s-item-play').forEach(b => {
     const on = b.dataset.url === url;
     b.textContent = on ? '⏸' : '▶';
@@ -814,6 +816,7 @@ function playDirect(url, name, artist) {
 async function runSearch(q) {
   const term = q.trim();
   if (!term) return;
+  $('searchSuggest').hidden = true;
   searchMeta.textContent = 'Nyari "' + term + '"… 🔍';
   searchResults.innerHTML = '<div class="search-empty">Lagi nyari di jutaan lagu…</div>';
   try {
@@ -848,6 +851,13 @@ async function runSearch(q) {
 }
 
 searchForm.addEventListener('submit', (e) => { e.preventDefault(); runSearch(searchInput.value); });
+searchInput.addEventListener('input', () => {
+  if (!searchInput.value.trim()) {
+    $('searchSuggest').hidden = false;
+    searchResults.innerHTML = '';
+    searchMeta.textContent = '';
+  }
+});
 searchResults.addEventListener('click', (e) => {
   const play = e.target.closest('.s-item-play');
   if (play) {
@@ -1062,6 +1072,7 @@ let pendingTrack = null;
 function openPlPick(track) {
   if (!track || !track.title) return;
   pendingTrack = track;
+  bumpLiked(track);
   $('plPickList').innerHTML = playlists.map(p => `
     <button class="pl-pick-item" data-pl-pick="${p.id}">
       <span class="pl-ic">${p.emoji || '🎵'}</span>
@@ -1101,6 +1112,94 @@ $('plPickNew').addEventListener('click', () => {
     toast('Playlist "' + name.trim() + '" dibuat 🎵');
   }
 });
+
+/* ============ SUGGEST GRID (rekomendasi awal, sebelum cari) ============ */
+const LS_LIKED = 'musickle_liked';
+const SG_GRADS = [
+  'linear-gradient(135deg,#6E96CC,#E8925A)',
+  'linear-gradient(135deg,#E3B25F,#D97A45)',
+  'linear-gradient(135deg,#7FC4B2,#6E96CC)',
+  'linear-gradient(135deg,#8FB0E0,#7FC4B2)',
+  'linear-gradient(135deg,#D9776B,#E3B25F)',
+  'linear-gradient(135deg,#5F86BC,#8FB0E0)',
+];
+function loadLiked() {
+  try { return JSON.parse(localStorage.getItem(LS_LIKED)) || []; }
+  catch (e) { return []; }
+}
+function saveLiked(list) { localStorage.setItem(LS_LIKED, JSON.stringify(list.slice(0, 20))); }
+function bumpLiked(track) {
+  if (!track || !track.title) return;
+  const list = loadLiked();
+  const key = (track.title + '|' + track.artist).toLowerCase();
+  const hit = list.find(t => (t.title + '|' + t.artist).toLowerCase() === key);
+  if (hit) {
+    hit.count = (hit.count || 1) + 1;
+    hit.url = hit.url || track.url || '';
+    hit.cover = hit.cover || track.cover || '';
+  } else {
+    list.push({ title: track.title, artist: track.artist, url: track.url || '', cover: track.cover || '', count: 1 });
+  }
+  saveLiked(list);
+  if ($('suggestGrid') && !$('searchSuggest').hidden) renderSuggest();
+}
+function renderSuggest() {
+  const liked = loadLiked().sort((a, b) => (b.count || 0) - (a.count || 0));
+  const seen = new Set();
+  const tracks = [];
+  liked.forEach(t => {
+    const k = (t.title + '|' + t.artist).toLowerCase();
+    if (!seen.has(k)) { seen.add(k); tracks.push({ title: t.title, artist: t.artist, url: t.url, cover: t.cover }); }
+  });
+  const pool = [...TRENDING].sort(() => Math.random() - 0.5);
+  pool.forEach(t => {
+    if (tracks.length >= 12) return;
+    const k = (t.song + '|' + t.artist).toLowerCase();
+    if (!seen.has(k)) { seen.add(k); tracks.push({ title: t.song, artist: t.artist, url: '', cover: '' }); }
+  });
+  $('suggestGrid').innerHTML = tracks.map((t, i) => `
+    <div class="sg-card" style="--sg-grad:${SG_GRADS[i % SG_GRADS.length]}">
+      <div class="sg-cover">
+        ${t.cover ? `<img src="${esc(t.cover)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">` : '<span class="sg-emoji">🎵</span>'}
+      </div>
+      <div class="sg-info">
+        <div class="sg-song">${esc(t.title)}</div>
+        <div class="sg-artist">${esc(t.artist)}</div>
+      </div>
+      <div class="sg-actions">
+        <button class="sg-play" data-sg-title="${esc(t.title)}" data-sg-artist="${esc(t.artist)}" data-sg-url="${esc(t.url)}" title="Putar">▶</button>
+        <button class="sg-add" data-sg-title="${esc(t.title)}" data-sg-artist="${esc(t.artist)}" data-sg-url="${esc(t.url)}" title="Tambah ke playlist">+ Pl</button>
+      </div>
+    </div>`).join('');
+}
+$('suggestGrid').addEventListener('click', (e) => {
+  const play = e.target.closest('.sg-play');
+  if (play) {
+    const title = play.dataset.sgTitle, artist = play.dataset.sgArtist, url = play.dataset.sgUrl;
+    if (url) {
+      playDirect(url, title, artist);
+    } else {
+      findPreview(title, artist).then(hit => {
+        if (!hit) { toast('Preview gak ketemu buat "' + title + '" 😢'); return; }
+        playDirect(hit.url, hit.name, hit.artist);
+      });
+    }
+    return;
+  }
+  const add = e.target.closest('.sg-add');
+  if (add) {
+    const title = add.dataset.sgTitle, artist = add.dataset.sgArtist, url = add.dataset.sgUrl;
+    if (url) {
+      openPlPick({ title, artist, url, cover: '' });
+    } else {
+      findPreview(title, artist).then(hit => {
+        if (!hit) { toast('Gak ketemu preview buat "' + title + '" 😢'); return; }
+        openPlPick({ title: hit.name, artist: hit.artist, url: hit.url, cover: '' });
+      });
+    }
+  }
+});
+renderSuggest();
 
 /* ============ PWA — service worker (installable, offline) ============ */
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
