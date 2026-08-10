@@ -971,7 +971,7 @@ body.ready .vinyl-wrap{animation:heroIn 1s cubic-bezier(.22,.9,.32,1) .6s both, 
   /* trending & energi */
   .trend-item{padding:14px 12px;gap:10px;}
   .trend-rank{font-size:20px;}
-  .trend-delta{font-size:10px;}
+  .trend-daily{font-size:10px;}
   .energy-console{padding:22px 16px;}
   .energy-song{min-height:58px;}
   /* footer */
