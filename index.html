@@ -10,6 +10,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bungee&family=Caveat:wght@600;700&family=Monoton&family=Archivo+Black&family=Fredoka:wght@600&family=Lobster&family=Righteous&family=Rubik+Mono+One&family=Space+Grotesk:wght@600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#14161F">
 </head>
 <body>
 
@@ -330,6 +333,34 @@
   </div>
 </section>
 
+<!-- ============ 07 — PLAYLIST ============ -->
+<section class="playlist-section" id="playlist">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">07 — Playlist</span>
+      <h2 class="section-title">PLAYLIST <span class="grad-text">KAMU</span></h2>
+      <p class="section-sub">Bikin playlist sendiri, tambahin lagu dari hasil cari — putar berurutan, acak, atau ulang. Kayak Spotify versi kamu.</p>
+    </div>
+    <div class="pl-layout">
+      <aside class="pl-side">
+        <div class="pl-list" id="plList"></div>
+        <button class="btn btn-ghost btn-sm pl-new" id="plNewBtn">+ Playlist baru</button>
+      </aside>
+      <div class="pl-main">
+        <div class="pl-head">
+          <h3 class="pl-title" id="plTitle">—</h3>
+          <div class="pl-actions">
+            <button class="btn btn-primary btn-sm" id="plPlayAll">▶ Putar semua</button>
+            <button class="btn btn-ghost btn-sm" id="plShufflePlay">🔀 Acak</button>
+          </div>
+        </div>
+        <div class="pl-tracks" id="plTracks"></div>
+        <div class="search-empty" id="plEmpty" hidden>Playlist masih kosong — cari lagu di atas, lalu klik <b>+ Pl</b> buat nambahin ke playlist ini.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ FOOTER ============ -->
 <footer class="footer">
   <div class="wrap footer-inner">
@@ -352,11 +383,23 @@
   <a href="#card" class="mb-item" data-spy="card"><span class="mb-ic">🎴</span><span class="mb-lb">Card</span></a>
 </nav>
 
-<!-- ============ PLAYER BAR (preview 30 detik) ============ -->
+<!-- ============ PLAYER BAR (Spotify-style) ============ -->
 <div class="now-playing" id="nowPlaying" hidden>
-  <span class="np-eq" aria-hidden="true"><i></i><i></i><i></i></span>
-  <span class="np-text"><b id="npTitle">—</b> <span id="npSub">preview 30 detik</span></span>
-  <button class="np-stop" id="npStop" aria-label="Berhenti">✕</button>
+  <img id="npCover" class="np-cover" alt="" onerror="this.style.visibility='hidden'">
+  <div class="np-text">
+    <b id="npTitle">—</b>
+    <span id="npSub">sedang diputar</span>
+  </div>
+  <button class="np-btn" id="npShuffle" title="Acak (shuffle)">🔀</button>
+  <button class="np-btn" id="npPrev" title="Sebelumnya">⏮</button>
+  <button class="np-play" id="npPlay" title="Putar / Jeda">⏸</button>
+  <button class="np-btn" id="npNext" title="Berikutnya">⏭</button>
+  <button class="np-btn" id="npRepeat" title="Ulangi (off → semua → satu)">🔁</button>
+  <div class="np-progress">
+    <div class="np-prog-bar" id="npProgBar"><i id="npProgFill"></i></div>
+    <span class="np-time" id="npTime">0:00 / 0:00</span>
+  </div>
+  <button class="np-stop" id="npStop" aria-label="Tutup player">✕</button>
 </div>
 
 <script src="script.js"></script>

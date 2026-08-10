@@ -591,12 +591,23 @@ function wrapText(ctx, text, x, y, maxW, lineH) {
   return yy + lineH;
 }
 
-/* ============ PREVIEW 30 DETIK (iTunes Search API) ============ */
+/* ============ PLAYER ENGINE (Spotify-style) ============ */
 const audio = new Audio();
 let currentPlayKey = null;
 const previewCache = {};
 const nowPlaying = $('nowPlaying');
 const npTitle = $('npTitle');
+const npCover = $('npCover');
+const npPlay = $('npPlay');
+const npPrev = $('npPrev');
+const npNext = $('npNext');
+const npShuffle = $('npShuffle');
+const npRepeat = $('npRepeat');
+const npProgBar = $('npProgBar');
+const npProgFill = $('npProgFill');
+const npTime = $('npTime');
+
+const player = { queue: [], seq: [], seqPos: -1, shuffle: false, repeat: 'off', plId: null };
 
 async function findPreview(title, artist) {
   const key = (title + '|' + artist).toLowerCase();
@@ -619,6 +630,123 @@ function resetPlayBtns() {
   document.querySelectorAll('.play-btn.playing').forEach(b => { b.textContent = '▶'; b.classList.remove('playing'); });
 }
 
+function fmtTime(s) {
+  if (!isFinite(s)) return '0:00';
+  const m = Math.floor(s / 60), ss = Math.floor(s % 60);
+  return m + ':' + String(ss).padStart(2, '0');
+}
+
+function shuffleArray(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function updateMediaSession(t) {
+  if (!('mediaSession' in navigator)) return;
+  try {
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: t.title,
+      artist: t.artist,
+      album: 'MUSICKLE',
+      artwork: t.cover ? [{ src: t.cover, sizes: '512x512' }] : [],
+    });
+    navigator.mediaSession.playbackState = 'playing';
+  } catch (e) { /* noop */ }
+}
+
+function setPlayingUI() {
+  npPlay.textContent = audio.paused ? '▶' : '⏸';
+  document.querySelectorAll('.pl-track').forEach(el => {
+    const btn = el.querySelector('.pl-play');
+    const i = btn ? +btn.dataset.plPlay : -1;
+    const playing = player.plId === activePlId && player.seq[player.seqPos] === i && !audio.paused;
+    el.classList.toggle('playing', playing);
+    if (btn) btn.textContent = playing ? '⏸' : '▶';
+  });
+}
+
+function loadTrack(pos) {
+  const t = player.queue[pos];
+  if (!t) return;
+  player.seqPos = pos;
+  audio.src = t.url;
+  audio.play().catch(() => {});
+  npTitle.textContent = t.title + ' — ' + t.artist;
+  npCover.src = t.cover || '';
+  npCover.style.visibility = t.cover ? 'visible' : 'hidden';
+  nowPlaying.hidden = false;
+  currentPlayKey = 'q|' + pos;
+  updateMediaSession(t);
+  setPlayingUI();
+}
+
+function playQueue(tracks, startIdx, plId) {
+  player.queue = tracks.map(t => ({ title: t.title, artist: t.artist, url: t.url, cover: t.cover || '' }));
+  player.plId = plId || null;
+  player.seq = player.queue.map((_, i) => i);
+  if (player.shuffle) shuffleArray(player.seq);
+  loadTrack(Math.max(0, player.seq.indexOf(startIdx)));
+}
+
+function nextTrack() {
+  if (!player.queue.length) return;
+  if (player.repeat === 'one') { audio.currentTime = 0; audio.play().catch(() => {}); return; }
+  if (player.seqPos < player.seq.length - 1) loadTrack(player.seqPos + 1);
+  else if (player.repeat === 'all') loadTrack(0);
+  else { audio.pause(); audio.currentTime = 0; setPlayingUI(); }
+}
+
+function prevTrack() {
+  if (!player.queue.length) return;
+  if (audio.currentTime > 3) { audio.currentTime = 0; return; }
+  loadTrack(player.seqPos > 0 ? player.seqPos - 1 : 0);
+}
+
+audio.addEventListener('ended', nextTrack);
+audio.addEventListener('play', setPlayingUI);
+audio.addEventListener('pause', setPlayingUI);
+audio.addEventListener('timeupdate', () => {
+  if (!audio.duration) return;
+  npProgFill.style.width = (audio.currentTime / audio.duration * 100) + '%';
+  npTime.textContent = fmtTime(audio.currentTime) + ' / ' + fmtTime(audio.duration);
+});
+npProgBar.addEventListener('click', (e) => {
+  const r = npProgBar.getBoundingClientRect();
+  const pct = (e.clientX - r.left) / r.width;
+  if (audio.duration) audio.currentTime = pct * audio.duration;
+});
+npPlay.addEventListener('click', () => { if (audio.paused) audio.play().catch(() => {}); else audio.pause(); });
+npNext.addEventListener('click', nextTrack);
+npPrev.addEventListener('click', prevTrack);
+npShuffle.addEventListener('click', () => {
+  player.shuffle = !player.shuffle;
+  npShuffle.classList.toggle('on', player.shuffle);
+  const cur = player.queue[player.seq[player.seqPos]];
+  if (!cur) return;
+  player.seq = player.queue.map((_, i) => i);
+  if (player.shuffle) {
+    const rest = player.seq.filter(i => player.queue[i] !== cur);
+    shuffleArray(rest);
+    player.seq = [player.queue.indexOf(cur), ...rest];
+  }
+  player.seqPos = 0;
+});
+npRepeat.addEventListener('click', () => {
+  player.repeat = player.repeat === 'off' ? 'all' : player.repeat === 'all' ? 'one' : 'off';
+  npRepeat.classList.toggle('on', player.repeat !== 'off');
+  npRepeat.title = 'Ulangi (' + (player.repeat === 'off' ? 'off' : player.repeat === 'all' ? 'semua' : 'satu') + ')';
+});
+if ('mediaSession' in navigator) {
+  navigator.mediaSession.setActionHandler('play', () => audio.play().catch(() => {}));
+  navigator.mediaSession.setActionHandler('pause', () => audio.pause());
+  navigator.mediaSession.setActionHandler('previoustrack', prevTrack);
+  navigator.mediaSession.setActionHandler('nexttrack', nextTrack);
+  navigator.mediaSession.setActionHandler('seekto', (d) => { if (d.seekTime != null) audio.currentTime = d.seekTime; });
+}
+
 async function togglePreview(btn) {
   const title = btn.dataset.play;
   const artist = btn.dataset.artist || '';
@@ -637,16 +765,14 @@ async function togglePreview(btn) {
     toast('Preview gak ketemu di iTunes buat "' + title + '" 😢');
     return;
   }
+  player.queue = [{ title: hit.name, artist: hit.artist, url: hit.url, cover: '' }];
+  player.plId = null;
+  player.seq = [0];
+  loadTrack(0);
   resetPlayBtns();
-  audio.src = hit.url;
-  audio.play().catch(() => {});
   btn.textContent = '⏸';
   btn.classList.add('playing');
-  currentPlayKey = key;
-  npTitle.textContent = hit.name + ' — ' + hit.artist;
-  nowPlaying.hidden = false;
 }
-audio.addEventListener('ended', () => { resetPlayBtns(); nowPlaying.hidden = true; currentPlayKey = null; });
 
 /* ============ 06 — CARI LAGU (iTunes Search API) ============ */
 const searchForm = $('searchForm');
@@ -695,6 +821,7 @@ async function runSearch(q) {
         <div class="s-actions">
           <button class="play-btn s-item-play" data-url="${esc(r.previewUrl)}" data-name="${esc(r.trackName)}" data-artist="${esc(r.artistName)}" title="Preview 30 detik">▶</button>
           <button class="s-use" data-song="${esc(r.trackName)}" data-artist="${esc(r.artistName)}" title="Pakai di card">+ Card</button>
+          <button class="s-use s-pl" data-pl-song="${esc(r.trackName)}" data-pl-artist="${esc(r.artistName)}" data-pl-url="${esc(r.previewUrl)}" data-pl-cover="${esc(r.artworkUrl100 || '')}" title="Tambah ke playlist">+ Pl</button>
         </div>
       </div>`).join('');
     scanReveals();
@@ -720,6 +847,17 @@ searchResults.addEventListener('click', (e) => {
     playDirect(play.dataset.url, play.dataset.name, play.dataset.artist);
     return;
   }
+  const addPl = e.target.closest('.s-pl');
+  if (addPl) {
+    const ok = addToPlaylist({
+      title: addPl.dataset.plSong,
+      artist: addPl.dataset.plArtist,
+      url: addPl.dataset.plUrl,
+      cover: addPl.dataset.plCover,
+    });
+    toast(ok ? 'Masuk playlist "' + getActivePl().name + '" 🎵' : 'Lagu udah ada di playlist / belum ada playlist');
+    return;
+  }
   const use = e.target.closest('.s-use');
   if (use) {
     $('cfSong').value = use.dataset.song;
@@ -736,10 +874,132 @@ document.addEventListener('click', (e) => {
 });
 $('npStop').addEventListener('click', () => {
   audio.pause();
+  audio.currentTime = 0;
   resetPlayBtns();
   nowPlaying.hidden = true;
   currentPlayKey = null;
+  player.queue = [];
+  player.seq = [];
+  player.seqPos = -1;
+  player.plId = null;
+  setPlayingUI();
 });
+
+/* ============ 07 — PLAYLIST ============ */
+const LS_PLAYLISTS = 'musickle_playlists_v1';
+let playlists = [];
+let activePlId = null;
+function loadPlaylists() {
+  try { playlists = JSON.parse(localStorage.getItem(LS_PLAYLISTS)) || []; }
+  catch (e) { playlists = []; }
+  if (!playlists.length) {
+    playlists = [{ id: 'pl-' + Date.now(), name: 'Favorit', emoji: '💛', tracks: [] }];
+    savePlaylists();
+  }
+  if (!playlists.find(p => p.id === activePlId)) activePlId = playlists[0].id;
+}
+function savePlaylists() { localStorage.setItem(LS_PLAYLISTS, JSON.stringify(playlists)); }
+function getActivePl() { return playlists.find(p => p.id === activePlId); }
+function addToPlaylist(track, plId) {
+  const pl = playlists.find(p => p.id === (plId || activePlId));
+  if (!pl || !track || !track.url) return false;
+  if (pl.tracks.some(t => t.url === track.url)) return false;
+  pl.tracks.push({ title: track.title, artist: track.artist, url: track.url, cover: track.cover || '' });
+  savePlaylists();
+  renderPlaylists();
+  return true;
+}
+function renderPlaylists() {
+  $('plList').innerHTML = playlists.map(p => `
+    <button class="pl-item ${p.id === activePlId ? 'active' : ''}" data-pl="${p.id}">
+      <span class="pl-ic">${p.emoji || '🎵'}</span>
+      <span class="pl-meta"><b>${esc(p.name)}</b><span>${p.tracks.length} lagu</span></span>
+      <span class="pl-del" data-pl-del="${p.id}" title="Hapus playlist">✕</span>
+    </button>`).join('');
+  renderPlaylistTracks();
+}
+function renderPlaylistTracks() {
+  const pl = getActivePl();
+  if (!pl) return;
+  $('plTitle').textContent = pl.name;
+  $('plEmpty').hidden = pl.tracks.length > 0;
+  $('plTracks').innerHTML = pl.tracks.map((t, i) => `
+    <div class="pl-track">
+      <img class="s-cover" src="${esc(t.cover || '')}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">
+      <div class="s-info">
+        <div class="s-song">${esc(t.title)}</div>
+        <div class="s-artist">${esc(t.artist)}</div>
+      </div>
+      <button class="pl-play" data-pl-play="${i}" title="Putar">▶</button>
+      <button class="pl-del" data-pl-del-track="${i}" title="Hapus dari playlist">✕</button>
+    </div>`).join('');
+}
+$('plList').addEventListener('click', (e) => {
+  const del = e.target.closest('[data-pl-del]');
+  if (del) {
+    e.stopPropagation();
+    const id = del.dataset.plDel;
+    if (player.plId === id) { audio.pause(); nowPlaying.hidden = true; player.plId = null; }
+    playlists = playlists.filter(p => p.id !== id);
+    if (activePlId === id) activePlId = playlists[0] ? playlists[0].id : null;
+    savePlaylists();
+    renderPlaylists();
+    toast('Playlist dihapus 🗑️');
+    return;
+  }
+  const item = e.target.closest('.pl-item');
+  if (item) { activePlId = item.dataset.pl; renderPlaylists(); }
+});
+$('plNewBtn').addEventListener('click', () => {
+  const name = prompt('Nama playlist baru:') || '';
+  if (!name.trim()) return;
+  playlists.unshift({ id: 'pl-' + Date.now(), name: name.trim(), emoji: '🎵', tracks: [] });
+  activePlId = playlists[0].id;
+  savePlaylists();
+  renderPlaylists();
+  toast('Playlist "' + name.trim() + '" dibuat 🎵');
+});
+$('plTracks').addEventListener('click', (e) => {
+  const del = e.target.closest('[data-pl-del-track]');
+  if (del) {
+    const pl = getActivePl();
+    pl.tracks.splice(+del.dataset.plDelTrack, 1);
+    savePlaylists();
+    renderPlaylists();
+    toast('Lagu dihapus dari playlist');
+    return;
+  }
+  const play = e.target.closest('[data-pl-play]');
+  if (play) {
+    const pl = getActivePl();
+    player.shuffle = false;
+    npShuffle.classList.remove('on');
+    playQueue(pl.tracks, +play.dataset.plPlay, pl.id);
+  }
+});
+$('plPlayAll').addEventListener('click', () => {
+  const pl = getActivePl();
+  if (!pl.tracks.length) { toast('Playlist masih kosong 😢'); return; }
+  player.shuffle = false;
+  npShuffle.classList.remove('on');
+  playQueue(pl.tracks, 0, pl.id);
+});
+$('plShufflePlay').addEventListener('click', () => {
+  const pl = getActivePl();
+  if (!pl.tracks.length) { toast('Playlist masih kosong 😢'); return; }
+  player.shuffle = true;
+  npShuffle.classList.add('on');
+  playQueue(pl.tracks, 0, pl.id);
+});
+loadPlaylists();
+renderPlaylists();
+
+/* ============ PWA — service worker (installable, offline) ============ */
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
 
 /* toast kecil */
 let toastEl = null, toastTimer = null;

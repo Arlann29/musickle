@@ -1,0 +1,14 @@
+{
+  "name": "MUSICKLE — Musik yang Kamu Banget",
+  "short_name": "MUSICKLE",
+  "description": "Cari lagu, preview, bikin playlist & card kesesuaian — musik yang kamu banget.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#14161F",
+  "theme_color": "#14161F",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
