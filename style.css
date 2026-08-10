@@ -288,10 +288,8 @@ section[id]{scroll-margin-top:80px;}
 .trend-mood-label{font-size:10.5px;color:var(--card-ink-faint);text-transform:uppercase;letter-spacing:.1em;font-weight:700;}
 .trend-bar{width:100%;height:6px;border-radius:99px;background:rgba(15,23,42,.10);overflow:hidden;}
 .trend-bar i{display:block;height:100%;border-radius:99px;background:var(--grad-rainbow);}
-.trend-delta{font-size:12px;font-weight:800;flex-shrink:0;width:64px;text-align:right;}
-.trend-delta.up{color:var(--mint);}
-.trend-delta.down{color:var(--red);}
-.trend-delta.flat{color:var(--card-ink-faint);}
+.trend-daily{font-size:12.5px;font-weight:800;flex-shrink:0;min-width:64px;text-align:right;color:var(--card-ink);}
+.trend-daily small{display:block;font-size:9px;color:var(--card-ink-faint);font-weight:700;text-transform:uppercase;letter-spacing:.08em;}
 
 /* ---------- energy ---------- */
 .energy-console{

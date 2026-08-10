@@ -57,29 +57,37 @@ const SIFAT = [
 ];
 
 const ARTIS = [
-  { name:'Pamungkas', genre:'R&B / Pop', tags:['chill','romantis','deep'], top:'To the Bone', grad:'linear-gradient(135deg,#E8925A,#8FB0E0)' },
-  { name:'Nadin Amizah', genre:'Folk / Indie', tags:['lembut','puitis','tenang'], top:'Bertaut', grad:'linear-gradient(135deg,#E3B25F,#E8925A)' },
-  { name:'Hindia', genre:'Indie Rock', tags:['dalam','kritik','renung'], top:'Rumah ke Rumah', grad:'linear-gradient(135deg,#8FB0E0,#6E96CC)' },
-  { name:'Raisa', genre:'Pop', tags:['hangat','aduhai','smooth'], top:'Luar Biasa', grad:'linear-gradient(135deg,#6E96CC,#7FC4B2)' },
-  { name:'The Weeknd', genre:'R&B / Synth', tags:['dramatis','malam','ikonik'], top:'Blinding Lights', grad:'linear-gradient(135deg,#D9776B,#D97A45)' },
-  { name:'Dua Lipa', genre:'Pop / Dance', tags:['energik','disco','gaspol'], top:'Levitating', grad:'linear-gradient(135deg,#E8925A,#E3B25F)' },
-  { name:'Coldplay', genre:'Alt Rock', tags:['emosional','megah','hopeful'], top:'Viva La Vida', grad:'linear-gradient(135deg,#232A3C,#8FB0E0)' },
-  { name:'Taylor Swift', genre:'Pop / Country', tags:['storytelling','galau','nostalgia'], top:'All Too Well', grad:'linear-gradient(135deg,#E3B25F,#D97A45)' },
-  { name:'NIKI', genre:'R&B', tags:['lembut','intim','mellow'], top:'Every Summertime', grad:'linear-gradient(135deg,#7FC4B2,#6E96CC)' },
-  { name:'Rich Brian', genre:'Hip-hop', tags:['santai','witty','lowkey'], top:'Dat $tick', grad:'linear-gradient(135deg,#8FB0E0,#E8925A)' },
-  { name:'Tulus', genre:'Jazz Pop', tags:['romantis','classy','hangat'], top:'Hati-Hati di Jalan', grad:'linear-gradient(135deg,#D97A45,#E3B25F)' },
-  { name:'Billie Eilish', genre:'Alt Pop', tags:['misterius','whisper','melankolis'], top:'Lovely', grad:'linear-gradient(135deg,#232A3C,#6E96CC)' },
+  { name:'The Weeknd', genre:'R&B / Synth', tags:['dramatis','malam','ikonik'], top:'Blinding Lights', grad:'linear-gradient(135deg,#6E96CC,#E8925A)' },
+  { name:'Taylor Swift', genre:'Pop / Country', tags:['storytelling','emosional','pop'], top:'Cruel Summer', grad:'linear-gradient(135deg,#E3B25F,#E8925A)' },
+  { name:'Bad Bunny', genre:'Latin / Reggaeton', tags:['reggaeton','latin','vibe'], top:'DÁKITI', grad:'linear-gradient(135deg,#D97A45,#7FA8DC)' },
+  { name:'Billie Eilish', genre:'Alt Pop', tags:['whisper','misterius','melankolis'], top:'BIRDS OF A FEATHER', grad:'linear-gradient(135deg,#232A3C,#8FB0E0)' },
+  { name:'Drake', genre:'Hip-hop / R&B', tags:['rap','smooth','ikonik'], top:'One Dance', grad:'linear-gradient(135deg,#6E96CC,#7FC4B2)' },
+  { name:'Ed Sheeran', genre:'Pop / Akustik', tags:['akustik','romantis','hangat'], top:'Shape of You', grad:'linear-gradient(135deg,#E3B25F,#C9DBF2)' },
+  { name:'Ariana Grande', genre:'Pop / R&B', tags:['high notes','power','pop'], top:'7 rings', grad:'linear-gradient(135deg,#8FB0E0,#F2C6B8)' },
+  { name:'Bruno Mars', genre:'Pop / Funk', tags:['funk','retro','energik'], top:'Locked out of Heaven', grad:'linear-gradient(135deg,#D97A45,#E3B25F)' },
+  { name:'Post Malone', genre:'Hip-hop / Pop', tags:['moody','rap-pop','chill'], top:'Sunflower', grad:'linear-gradient(135deg,#7FC4B2,#A5C8E8)' },
+  { name:'Eminem', genre:'Hip-hop', tags:['rap','lirik','gaspol'], top:'Without Me', grad:'linear-gradient(135deg,#232A3C,#6E96CC)' },
+  { name:'Justin Bieber', genre:'Pop / R&B', tags:['catchy','hangat','pop'], top:'Love Yourself', grad:'linear-gradient(135deg,#C9DBF2,#E3B25F)' },
+  { name:'Rihanna', genre:'R&B / Pop', tags:['ikonik','vibe','r&b'], top:'Umbrella', grad:'linear-gradient(135deg,#E8925A,#F2C6B8)' },
+  { name:'Coldplay', genre:'Alt Rock', tags:['emosional','megah','hopeful'], top:'Yellow', grad:'linear-gradient(135deg,#5F86BC,#C9DBF2)' },
+  { name:'Maroon 5', genre:'Pop / Rock', tags:['funk-rock','catchy','pop'], top:'Payphone', grad:'linear-gradient(135deg,#7FA8DC,#B7C98C)' },
+  { name:'Lady Gaga', genre:'Pop / Dance', tags:['powerful','dramatis','pop'], top:'Die With A Smile', grad:'linear-gradient(135deg,#E8925A,#D9776B)' },
+  { name:'Calvin Harris', genre:'EDM / Dance', tags:['edm','dance','party'], top:'One Kiss', grad:'linear-gradient(135deg,#A5C8E8,#7FC4B2)' },
 ];
 
 const TRENDING = [
-  { song:'Blinding Lights', artist:'The Weeknd', delta:+12, mood:88 },
-  { song:'To the Bone', artist:'Pamungkas', delta:+7, mood:72 },
-  { song:'Runtuh', artist:'Feby Putri ft. Fiersa Besari', delta:+15, mood:64 },
-  { song:'Bertaut', artist:'Nadin Amizah', delta:+4, mood:58 },
-  { song:'Levitating', artist:'Dua Lipa', delta:-3, mood:81 },
-  { song:'Rumah ke Rumah', artist:'Hindia', delta:+9, mood:55 },
-  { song:'Every Summertime', artist:'NIKI', delta:-2, mood:49 },
-  { song:'Hati-Hati di Jalan', artist:'Tulus', delta:-6, mood:45 },
+  { song:'Blinding Lights', artist:'The Weeknd', daily:1576932, mood:63 },
+  { song:'Shape of You', artist:'Ed Sheeran', daily:1410416, mood:57 },
+  { song:'Sweater Weather', artist:'The Neighbourhood', daily:2217648, mood:89 },
+  { song:'Starboy', artist:'The Weeknd', daily:1930202, mood:77 },
+  { song:'As It Was', artist:'Harry Styles', daily:1847475, mood:74 },
+  { song:'Someone You Loved', artist:'Lewis Capaldi', daily:882924, mood:35 },
+  { song:'One Dance', artist:'Drake', daily:1929395, mood:77 },
+  { song:'Sunflower', artist:'Post Malone', daily:2497026, mood:100 },
+  { song:'Perfect', artist:'Ed Sheeran', daily:1256982, mood:50 },
+  { song:'STAY', artist:'The Kid LAROI', daily:1203957, mood:48 },
+  { song:'I Wanna Be Yours', artist:'Arctic Monkeys', daily:1734193, mood:69 },
+  { song:'Believer', artist:'Imagine Dragons', daily:980382, mood:39 },
 ];
 
 const ENERGY_POOL = [
@@ -280,20 +288,21 @@ artistFilters.addEventListener('click', (e) => {
 });
 
 /* ============ 03 — TRENDING ============ */
+const fmtDaily = (n) => (n >= 1e6 ? (n / 1e6).toFixed(1).replace('.', ',') + 'M' : Math.round(n / 1e3) + 'K');
 $('trendList').innerHTML = TRENDING.map((t, i) => `
-<div class="trend-item" data-reveal style="--stagger:${i % 4}">
-  <span class="trend-rank ${i < 3 ? 'top3' : ''}">${String(i + 1).padStart(2, '0')}</span>
-  <div class="trend-info">
-    <div class="trend-song">${esc(t.song)}</div>
-    <div class="trend-artist">${esc(t.artist)}</div>
-  </div>
-  <div class="trend-mood">
-    <span class="trend-mood-label">Heat</span>
-    <div class="trend-bar"><i style="width:${t.mood}%"></i></div>
-  </div>
-  <span class="trend-delta ${t.delta > 0 ? 'up' : t.delta < 0 ? 'down' : 'flat'}">${t.delta > 0 ? '▲' : t.delta < 0 ? '▼' : '—'} ${Math.abs(t.delta)}</span>
-  <button class="play-btn" data-play="${esc(t.song)}" data-artist="${esc(t.artist)}" title="Preview 30 detik">▶</button>
-</div>`).join('');
+  <div class="trend-item" data-reveal style="--stagger:${i % 4}">
+    <span class="trend-rank ${i < 3 ? 'top3' : ''}">${String(i + 1).padStart(2, '0')}</span>
+    <div class="trend-info">
+      <div class="trend-song">${esc(t.song)}</div>
+      <div class="trend-artist">${esc(t.artist)}</div>
+    </div>
+    <div class="trend-mood">
+      <span class="trend-mood-label">Heat</span>
+      <div class="trend-bar"><i style="width:${t.mood}%"></i></div>
+    </div>
+    <span class="trend-daily">${fmtDaily(t.daily)}<small>/hari</small></span>
+    <button class="play-btn" data-play="${esc(t.song)}" data-artist="${esc(t.artist)}" title="Preview 30 detik">▶</button>
+  </div>`).join('');
 
 /* ============ 04 — ENERGY ============ */
 const energySlider = $('energySlider');
