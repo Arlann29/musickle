@@ -668,9 +668,24 @@ function setPlayingUI() {
   });
 }
 
-function loadTrack(pos) {
+async function loadTrack(pos) {
   const t = player.queue[pos];
   if (!t) return;
+  if (!t.url) {
+    // lagu template tanpa URL — cari preview dulu (lazy)
+    npTitle.textContent = t.title + ' — ' + t.artist;
+    nowPlaying.hidden = false;
+    npPlay.textContent = '…';
+    const hit = await findPreview(t.title, t.artist);
+    if (!hit) {
+      npPlay.textContent = '▶';
+      nowPlaying.hidden = true;
+      toast('Preview gak ketemu buat "' + t.title + '" 😢');
+      nextTrack();
+      return;
+    }
+    t.url = hit.url;
+  }
   player.seqPos = pos;
   audio.src = t.url;
   audio.play().catch(() => {});
@@ -887,6 +902,32 @@ $('npStop').addEventListener('click', () => {
 
 /* ============ 07 — PLAYLIST ============ */
 const LS_PLAYLISTS = 'musickle_playlists_v1';
+const PL_TEMPLATES = [
+  { name: 'Chill Vibes', emoji: '🌙', tracks: [
+    { title: 'Sweater Weather', artist: 'The Neighbourhood' },
+    { title: 'Someone You Loved', artist: 'Lewis Capaldi' },
+    { title: 'Perfect', artist: 'Ed Sheeran' },
+    { title: 'I Wanna Be Yours', artist: 'Arctic Monkeys' },
+  ]},
+  { name: 'Gaspol', emoji: '🔥', tracks: [
+    { title: 'Believer', artist: 'Imagine Dragons' },
+    { title: 'Starboy', artist: 'The Weeknd' },
+    { title: 'One Dance', artist: 'Drake' },
+    { title: 'Sunflower', artist: 'Post Malone' },
+  ]},
+  { name: 'Galau Malam', emoji: '🌧️', tracks: [
+    { title: 'Someone You Loved', artist: 'Lewis Capaldi' },
+    { title: 'As It Was', artist: 'Harry Styles' },
+    { title: 'Blinding Lights', artist: 'The Weeknd' },
+    { title: 'Perfect', artist: 'Ed Sheeran' },
+  ]},
+  { name: 'Legends', emoji: '🏆', tracks: [
+    { title: 'Blinding Lights', artist: 'The Weeknd' },
+    { title: 'Shape of You', artist: 'Ed Sheeran' },
+    { title: 'One Dance', artist: 'Drake' },
+    { title: 'Sunflower', artist: 'Post Malone' },
+  ]},
+];
 let playlists = [];
 let activePlId = null;
 function loadPlaylists() {
@@ -894,8 +935,20 @@ function loadPlaylists() {
   catch (e) { playlists = []; }
   if (!playlists.length) {
     playlists = [{ id: 'pl-' + Date.now(), name: 'Favorit', emoji: '💛', tracks: [] }];
-    savePlaylists();
   }
+  if (!localStorage.getItem('musickle_pl_seeded')) {
+    PL_TEMPLATES.forEach((tpl, i) => {
+      if (!playlists.some(p => p.name === tpl.name)) {
+        playlists.push({
+          id: 'pl-tpl-' + i + '-' + Date.now(),
+          name: tpl.name, emoji: tpl.emoji,
+          tracks: tpl.tracks.map(t => ({ title: t.title, artist: t.artist, url: '', cover: '' })),
+        });
+      }
+    });
+    localStorage.setItem('musickle_pl_seeded', '1');
+  }
+  savePlaylists();
   if (!playlists.find(p => p.id === activePlId)) activePlId = playlists[0].id;
 }
 function savePlaylists() { localStorage.setItem(LS_PLAYLISTS, JSON.stringify(playlists)); }
