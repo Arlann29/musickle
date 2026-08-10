@@ -191,15 +191,30 @@ const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&
 $('burger').addEventListener('click', () => $('mobileMenu').classList.toggle('open'));
 document.querySelectorAll('#mobileMenu a').forEach(a => a.addEventListener('click', () => $('mobileMenu').classList.remove('open')));
 
-/* ============ SCROLL REVEAL ============ */
-const revealEls = document.querySelectorAll('[data-reveal]');
-if ('IntersectionObserver' in window) {
-  const ro = new IntersectionObserver((entries) => {
-    entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in-view'); ro.unobserve(en.target); } });
-  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-  revealEls.forEach(el => ro.observe(el));
-} else {
-  revealEls.forEach(el => el.classList.add('in-view'));
+/* ============ SCROLL REVEAL (dinamis — scan ulang saat render baru) ============ */
+function scanReveals() {
+  document.querySelectorAll('[data-reveal]:not(.in-view)').forEach(el => {
+    if (!('IntersectionObserver' in window)) { el.classList.add('in-view'); return; }
+    const r = el.getBoundingClientRect();
+    // sudah lewat/masuk viewport (mis. kena scroll cepat) -> langsung tampil
+    if (r.top < window.innerHeight - 40) el.classList.add('in-view');
+    else ro.observe(el);
+  });
+}
+const ro = new IntersectionObserver((entries) => {
+  entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in-view'); ro.unobserve(en.target); } });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+scanReveals();
+let revealTicking = false;
+window.addEventListener('scroll', () => {
+  if (revealTicking) return;
+  revealTicking = true;
+  requestAnimationFrame(() => { scanReveals(); revealTicking = false; });
+}, { passive: true });
+if ('MutationObserver' in window && 'IntersectionObserver' in window) {
+  new MutationObserver(scanReveals).observe(document.body, { childList: true, subtree: true });
+} else if (!('IntersectionObserver' in window)) {
+  setInterval(() => document.querySelectorAll('[data-reveal]').forEach(el => el.classList.add('in-view')), 400);
 }
 
 /* ============ 01 — SIFAT MUSIK ============ */
