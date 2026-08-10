@@ -367,6 +367,7 @@ $('trendList').innerHTML = TRENDING.map((t, i) => `
     </div>
     <span class="trend-daily">${fmtDaily(t.daily)}<small>/hari</small></span>
     <button class="t-add" data-add-play="${esc(t.song)}" data-add-artist="${esc(t.artist)}" title="Tambah ke playlist">+</button>
+    <button class="t-full" data-full-title="${esc(t.song)}" data-full-artist="${esc(t.artist)}" title="Putar full (YouTube)">📺</button>
     <button class="play-btn" data-play="${esc(t.song)}" data-artist="${esc(t.artist)}" title="Preview 30 detik">▶</button>
   </div>`).join('');
 document.querySelectorAll('#trendList .trend-cover').forEach(el => applyCover(el, el.dataset.covTitle, el.dataset.covArtist));
@@ -891,6 +892,7 @@ async function runSearch(q) {
         </div>
         <div class="s-actions">
           <button class="play-btn s-item-play" data-url="${esc(r.previewUrl)}" data-name="${esc(r.trackName)}" data-artist="${esc(r.artistName)}" title="Preview 30 detik">▶</button>
+          <button class="s-use s-full" data-full-title="${esc(r.trackName)}" data-full-artist="${esc(r.artistName)}" title="Putar full (YouTube)">📺 Full</button>
           <button class="s-use" data-song="${esc(r.trackName)}" data-artist="${esc(r.artistName)}" title="Pakai di card">+Card</button>
           <button class="s-use s-pl" data-pl-song="${esc(r.trackName)}" data-pl-artist="${esc(r.artistName)}" data-pl-url="${esc(r.previewUrl)}" data-pl-cover="${esc(r.artworkUrl100 || '')}" title="Tambah ke playlist">+Pl</button>
         </div>
@@ -946,6 +948,11 @@ searchResults.addEventListener('click', (e) => {
 });
 
 document.addEventListener('click', (e) => {
+  const full = e.target.closest('.s-full, .t-full, .sg-full, .pl-full');
+  if (full) {
+    openFull(full.dataset.fullTitle, full.dataset.fullArtist);
+    return;
+  }
   const addT = e.target.closest('.t-add');
   if (addT) {
     const title = addT.dataset.addPlay, artist = addT.dataset.addArtist;
@@ -1055,6 +1062,7 @@ function renderPlaylistTracks() {
         <div class="s-artist">${esc(t.artist)}</div>
       </div>
       <button class="pl-play" data-pl-play="${i}" title="Putar">▶</button>
+      <button class="pl-full" data-full-title="${esc(t.title)}" data-full-artist="${esc(t.artist)}" title="Putar full (YouTube)">📺</button>
       <button class="pl-del" data-pl-del-track="${i}" title="Hapus dari playlist">✕</button>
     </div>`).join('');
   document.querySelectorAll('#plTracks .s-cover').forEach(el => applyCover(el, el.dataset.covTitle, el.dataset.covArtist));
@@ -1222,7 +1230,8 @@ function renderSuggest() {
       </div>
       <div class="sg-actions">
         <button class="sg-play" data-sg-title="${esc(t.title)}" data-sg-artist="${esc(t.artist)}" data-sg-url="${esc(t.url)}" title="Putar">▶</button>
-        <button class="sg-add" data-sg-title="${esc(t.title)}" data-sg-artist="${esc(t.artist)}" data-sg-url="${esc(t.url)}" title="Tambah ke playlist">+ Pl</button>
+        <button class="sg-full" data-full-title="${esc(t.title)}" data-full-artist="${esc(t.artist)}" title="Putar full (YouTube)">📺</button>
+        <button class="sg-add" data-sg-title="${esc(t.title)}" data-sg-artist="${esc(t.artist)}" data-sg-url="${esc(t.url)}" title="Tambah ke playlist">+</button>
       </div>
     </div>`).join('');
   document.querySelectorAll('#suggestGrid .sg-cover-img').forEach(el => applyCover(el, el.dataset.covTitle, el.dataset.covArtist));
@@ -1255,6 +1264,24 @@ $('suggestGrid').addEventListener('click', (e) => {
   }
 });
 renderSuggest();
+
+/* ============ PUTAR FULL (YouTube embed resmi) ============ */
+const fullPanel = $('fullPanel');
+const fullFrame = $('fullFrame');
+const fullTitleEl = $('fullTitle');
+function openFull(title, artist) {
+  if (!title) return;
+  fullTitleEl.textContent = title + ' — ' + artist;
+  fullFrame.src = 'https://www.youtube-nocookie.com/embed?listType=search&list='
+    + encodeURIComponent(title + ' ' + artist)
+    + '&autoplay=1&modestbranding=1&rel=0';
+  fullPanel.hidden = false;
+  fullPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+$('fullClose').addEventListener('click', () => {
+  fullPanel.hidden = true;
+  fullFrame.src = '';
+});
 
 /* ============ PWA — service worker (installable, offline) ============ */
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
