@@ -1363,6 +1363,13 @@ $('authBtnM').addEventListener('click', () => {
 });
 $('authX').addEventListener('click', closeAuth);
 $('authModal').addEventListener('click', (e) => { if (e.target === $('authModal')) closeAuth(); });
+$('authEye').addEventListener('click', () => {
+  const inp = $('authPass');
+  const show = inp.type === 'password';
+  inp.type = show ? 'text' : 'password';
+  $('authEye').textContent = show ? '🙈' : '👁️';
+  $('authEye').title = show ? 'Sembunyikan password' : 'Lihat password';
+});
 $('tabLogin').addEventListener('click', () => {
   authMode = 'login';
   $('tabLogin').classList.add('active');
