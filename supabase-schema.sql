@@ -27,11 +27,11 @@ alter table public.playlists enable row level security;
 alter table public.cards enable row level security;
 
 create policy "playlists: own all" on public.playlists
-  for all using (auth.uid() = user_id);
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 create policy "playlists: public read" on public.playlists
   for select using (is_public = true);
 
 create policy "cards: own all" on public.cards
-  for all using (auth.uid() = user_id);
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 create policy "cards: public read" on public.cards
   for select using (is_public = true);

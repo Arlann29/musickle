@@ -1,11 +1,6 @@
 /* ============ MUSICKLE — Konfigurasi Supabase ============
-   Cara setup (5 menit):
-   1. Buka https://supabase.com → Sign in (bisa pakai GitHub) → New project
-      (nama bebas, password database SIMPAN, region Singapore/Asia)
-   2. Setelah project jadi: kiri bawah → Settings → API →
-      copy "Project URL" ke SUPABASE_URL dan "anon public" key ke SUPABASE_ANON_KEY
-   3. Di SQL Editor, jalankan isi file supabase-schema.sql (buat tabel + RLS)
-   4. Masukkan kedua nilai di bawah, commit, push — fitur login langsung aktif.
-   Kalau dikosongkan, website tetap jalan normal (mode lokal) tanpa login. */
-const SUPABASE_URL = '';
-const SUPABASE_ANON_KEY = '';
+   Project: hvbpipbqcswgkjbmlltp (dibuat 2026-08-11)
+   Tabel playlists & cards + RLS sudah dibuat via supabase-schema.sql.
+   anon key aman dipublish (untuk klien). Service role key JANGAN ditaruh di sini. */
+const SUPABASE_URL = 'https://hvbpipbqcswgkjbmlltp.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2YnBpcGJxY3N3Z2tqYm1sbHRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0NTMwNTIsImV4cCI6MjEwMjAyOTA1Mn0.RYe0IVUVbtjnuBNBKRKOLkRH-YVt4hMVWyTHp4fs-us';
