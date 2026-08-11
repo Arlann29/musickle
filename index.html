@@ -39,6 +39,7 @@
       <a href="#energy">Energy</a>
       <a href="#cari">Cari Lagu</a>
       <a href="#card" class="nav-cta">Bikin Card Kamu</a>
+      <button class="auth-btn" id="authBtn" title="Masuk / daftar">👤 Masuk</button>
     </nav>
     <button class="burger" id="burger" aria-label="Buka menu"><span></span><span></span><span></span></button>
   </div>
@@ -48,6 +49,7 @@
     <a href="#trending">Trending</a>
     <a href="#energy">Energy</a>
     <a href="#cari">Cari Lagu</a>
+    <button class="auth-btn" id="authBtnM" title="Masuk / daftar">👤 Masuk</button>
     <a href="#card">Bikin Card Kamu</a>
   </div>
 </header>
@@ -395,6 +397,26 @@
   <a href="#card" class="mb-item" data-spy="card"><span class="mb-ic">🎴</span><span class="mb-lb">Card</span></a>
 </nav>
 
+<!-- ============ MODAL AUTH (login / daftar) ============ -->
+<div class="auth-modal" id="authModal" hidden>
+  <div class="auth-card">
+    <button class="auth-x" id="authX" title="Tutup">✕</button>
+    <div class="auth-logo">MUSICKLE<span class="logo-dot">.</span></div>
+    <p class="auth-tag" id="authTag">Masuk buat nyimpen playlist & card kamu secara online — bisa dibuka dari HP atau PC mana pun.</p>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin">Masuk</button>
+      <button class="auth-tab" id="tabSignup">Daftar</button>
+    </div>
+    <form id="authForm" autocomplete="off">
+      <input type="email" id="authEmail" placeholder="Email kamu" required>
+      <input type="password" id="authPass" placeholder="Password (min. 6 huruf)" minlength="6" required>
+      <div class="auth-err" id="authErr" hidden></div>
+      <button type="submit" class="auth-submit" id="authSubmit">Masuk →</button>
+    </form>
+    <p class="auth-note" id="authNote"></p>
+  </div>
+</div>
+
 <!-- ============ MODAL PILIH PLAYLIST ============ -->
 <div class="pl-pick-modal" id="plPickModal" hidden>
   <div class="pl-pick-card">
@@ -426,6 +448,8 @@
   <button class="np-stop" id="npStop" aria-label="Tutup player">✕</button>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
 <script src="script.js"></script>
 </body>
 </html>

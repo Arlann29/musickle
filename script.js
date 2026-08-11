@@ -232,6 +232,10 @@ function pumpCovers() {
   }
 }
 
+/* ---------- state akun online (Supabase) — deklarasi di awal biar aman ---------- */
+let sb = null;
+let cloudUser = null;
+
 /* ============ NAV MOBILE ============ */
 $('burger').addEventListener('click', () => $('mobileMenu').classList.toggle('open'));
 document.querySelectorAll('#mobileMenu a').forEach(a => a.addEventListener('click', () => $('mobileMenu').classList.remove('open')));
@@ -538,6 +542,7 @@ $('posPicker').addEventListener('click', (e) => {
 /* save */
 function saveCards() {
   localStorage.setItem(LS_CARDS, JSON.stringify(cards));
+  if (cloudUser) cloudSaveCards();
   renderGallery();
 }
 $('saveCardBtn').addEventListener('click', () => {
@@ -582,6 +587,8 @@ function renderGallery() {
         <div class="mc-from">dibuat oleh <b>${esc(c.name) || 'kamu'}</b> · musikle</div>
       </div>
       <div class="gallery-actions">
+        <button class="gallery-btn vis" data-act="vis" title="${c.is_public ? 'Public — semua orang bisa lihat' : 'Private — cuma kamu'}">${c.is_public ? '🌍' : '🔒'}</button>
+        <button class="gallery-btn share" data-act="share" title="Salin link card">🔗</button>
         <button class="gallery-btn edit" data-act="edit" title="Edit">✏️</button>
         <button class="gallery-btn del" data-act="del" title="Hapus">🗑</button>
       </div>
@@ -593,6 +600,14 @@ $('galleryGrid').addEventListener('click', (e) => {
   if (!btn) return;
   const item = btn.closest('.gallery-item');
   const id = item.dataset.id;
+  if (btn.dataset.act === 'vis') {
+    toggleCardVis(id);
+    return;
+  }
+  if (btn.dataset.act === 'share') {
+    shareCard(id);
+    return;
+  }
   if (btn.dataset.act === 'del') {
     cards = cards.filter(c => c.id !== id);
     saveCards();
@@ -1029,7 +1044,7 @@ function loadPlaylists() {
   savePlaylists();
   if (!playlists.find(p => p.id === activePlId)) activePlId = playlists[0].id;
 }
-function savePlaylists() { localStorage.setItem(LS_PLAYLISTS, JSON.stringify(playlists)); }
+function savePlaylists() { localStorage.setItem(LS_PLAYLISTS, JSON.stringify(playlists)); if (cloudUser) cloudSavePlaylists(); }
 function getActivePl() { return playlists.find(p => p.id === activePlId); }
 function addToPlaylist(track, plId) {
   const pl = playlists.find(p => p.id === (plId || activePlId));
@@ -1045,6 +1060,8 @@ function renderPlaylists() {
     <button class="pl-item ${p.id === activePlId ? 'active' : ''}" data-pl="${p.id}">
       <span class="pl-ic">${p.emoji || '🎵'}</span>
       <span class="pl-meta"><b>${esc(p.name)}</b><span>${p.tracks.length} lagu</span></span>
+      <span class="pl-vis ${p.is_public ? 'pub' : ''}" data-pl-vis="${p.id}" title="${p.is_public ? 'Public — semua orang bisa lihat' : 'Private — cuma kamu'}">${p.is_public ? '🌍' : '🔒'}</span>
+      <span class="pl-share" data-pl-share="${p.id}" title="Salin link buat dibagikan">🔗</span>
       <span class="pl-del" data-pl-del="${p.id}" title="Hapus playlist">✕</span>
     </button>`).join('');
   renderPlaylistTracks();
@@ -1068,6 +1085,18 @@ function renderPlaylistTracks() {
   document.querySelectorAll('#plTracks .s-cover').forEach(el => applyCover(el, el.dataset.covTitle, el.dataset.covArtist));
 }
 $('plList').addEventListener('click', (e) => {
+  const vis = e.target.closest('[data-pl-vis]');
+  if (vis) {
+    e.stopPropagation();
+    togglePlVis(vis.dataset.plVis);
+    return;
+  }
+  const share = e.target.closest('[data-pl-share]');
+  if (share) {
+    e.stopPropagation();
+    sharePl(share.dataset.plShare);
+    return;
+  }
   const del = e.target.closest('[data-pl-del]');
   if (del) {
     e.stopPropagation();
@@ -1282,6 +1311,230 @@ $('fullClose').addEventListener('click', () => {
   fullPanel.hidden = true;
   fullFrame.src = '';
 });
+
+/* ============ AKUN ONLINE (Supabase) ============ */
+function initCloud() {
+  if (window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY) {
+    try { sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); } catch (e) { sb = null; }
+  }
+  if (!sb) return;
+  sb.auth.getSession().then(({ data }) => {
+    cloudUser = data.session ? data.session.user : null;
+    setAuthUI();
+    if (cloudUser) {
+      syncLocalToCloud().then(() => toast('Halo, ' + cloudUser.email + '! Data kamu tersinkron 🌍'));
+    }
+    handleShareLink();
+  });
+  sb.auth.onAuthStateChange((ev, session) => {
+    cloudUser = session ? session.user : null;
+    setAuthUI();
+    if (ev === 'SIGNED_IN') {
+      syncLocalToCloud().then(() => toast('Berhasil masuk! Data kamu tersinkron 🌍'));
+    }
+  });
+}
+function setAuthUI() {
+  const on = !!cloudUser;
+  const label = on ? '👤 ' + (cloudUser.email || '').split('@')[0] : '👤 Masuk';
+  $('authBtn').textContent = label;
+  $('authBtn').classList.toggle('on', on);
+  $('authBtn').title = on ? 'Keluar dari akun (' + cloudUser.email + ')' : 'Masuk / daftar';
+  $('authBtnM').textContent = on ? '👤 ' + (cloudUser.email || '').split('@')[0] + ' — keluar' : '👤 Masuk / Daftar';
+  $('authBtnM').classList.toggle('on', on);
+}
+
+/* --- modal auth --- */
+let authMode = 'login';
+function openAuth() {
+  authMode = 'login';
+  $('tabLogin').classList.add('active');
+  $('tabSignup').classList.remove('active');
+  $('authSubmit').textContent = 'Masuk →';
+  $('authTag').textContent = 'Masuk buat nyimpen playlist & card kamu secara online — bisa dibuka dari HP atau PC mana pun.';
+  $('authErr').hidden = true;
+  $('authModal').hidden = false;
+}
+function closeAuth() { $('authModal').hidden = true; }
+$('authBtn').addEventListener('click', () => { if (cloudUser) doLogout(); else openAuth(); });
+$('authBtnM').addEventListener('click', () => {
+  $('mobileMenu').classList.remove('open');
+  if (cloudUser) doLogout(); else openAuth();
+});
+$('authX').addEventListener('click', closeAuth);
+$('authModal').addEventListener('click', (e) => { if (e.target === $('authModal')) closeAuth(); });
+$('tabLogin').addEventListener('click', () => {
+  authMode = 'login';
+  $('tabLogin').classList.add('active');
+  $('tabSignup').classList.remove('active');
+  $('authSubmit').textContent = 'Masuk →';
+  $('authErr').hidden = true;
+});
+$('tabSignup').addEventListener('click', () => {
+  authMode = 'signup';
+  $('tabSignup').classList.add('active');
+  $('tabLogin').classList.remove('active');
+  $('authSubmit').textContent = 'Daftar & Masuk →';
+  $('authErr').hidden = true;
+});
+$('authForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const email = $('authEmail').value.trim();
+  const pass = $('authPass').value;
+  const errEl = $('authErr');
+  if (!sb) {
+    errEl.textContent = 'Server online belum disetup. Isi SUPABASE_URL & SUPABASE_ANON_KEY di config.js (lihat instruksi), atau minta admin mengaktifkannya.';
+    errEl.hidden = false;
+    return;
+  }
+  $('authSubmit').disabled = true;
+  $('authSubmit').textContent = 'Tunggu…';
+  const action = authMode === 'login'
+    ? sb.auth.signInWithPassword({ email, password: pass })
+    : sb.auth.signUp({ email, password: pass });
+  action.then(({ error }) => {
+    $('authSubmit').disabled = false;
+    if (error) {
+      $('authSubmit').textContent = authMode === 'login' ? 'Masuk →' : 'Daftar & Masuk →';
+      errEl.textContent = authMode === 'signup' && error.message.includes('already')
+        ? 'Email ini sudah terdaftar — coba tab "Masuk".'
+        : error.message;
+      errEl.hidden = false;
+    } else {
+      closeAuth();
+      $('authPass').value = '';
+    }
+  });
+});
+function doLogout() {
+  if (!sb) return;
+  sb.auth.signOut().then(() => {
+    setAuthUI();
+    toast('Udah keluar. Data kamu tetap aman di cloud 👋');
+  });
+}
+
+/* --- visibilitas & share playlist --- */
+function togglePlVis(id) {
+  const p = playlists.find(x => x.id === id);
+  if (!p) return;
+  if (p.shared) { toast('Ini playlist orang lain — nggak bisa diubah 😅'); return; }
+  p.is_public = !p.is_public;
+  savePlaylists();
+  renderPlaylists();
+  toast(p.is_public ? 'Playlist sekarang PUBLIC 🌍 — semua orang bisa lihat lewat link' : 'Playlist sekarang PRIVATE 🔒 — cuma kamu');
+}
+function sharePl(id) {
+  const p = playlists.find(x => x.id === id);
+  if (!p) return;
+  const link = location.origin + location.pathname + '?pl=' + encodeURIComponent(id);
+  copyText(link);
+  toast('Link playlist disalin! Kirim ke siapa aja 📋');
+}
+function toggleCardVis(id) {
+  const c = cards.find(x => x.id === id);
+  if (!c) return;
+  if (c.shared) { toast('Ini card orang lain — nggak bisa diubah 😅'); return; }
+  c.is_public = !c.is_public;
+  saveCards();
+  toast(c.is_public ? 'Card sekarang PUBLIC 🌍' : 'Card sekarang PRIVATE 🔒');
+}
+function shareCard(id) {
+  const c = cards.find(x => x.id === id);
+  if (!c) return;
+  const link = location.origin + location.pathname + '?card=' + encodeURIComponent(id);
+  copyText(link);
+  toast('Link card disalin! Kirim ke siapa aja 📋');
+}
+function copyText(txt) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).catch(() => {});
+  }
+}
+
+/* --- sinkronisasi cloud --- */
+function cloudSavePlaylists() {
+  if (!sb || !cloudUser) return;
+  const rows = playlists.map(p => ({
+    id: p.id, user_id: cloudUser.id, name: p.name, emoji: p.emoji || '🎵',
+    is_public: !!p.is_public, tracks: p.tracks,
+  }));
+  sb.from('playlists').upsert(rows).then(() => {});
+}
+function cloudSaveCards() {
+  if (!sb || !cloudUser) return;
+  const rows = cards.map(c => ({
+    id: c.id, user_id: cloudUser.id, is_public: !!c.is_public, data: c,
+  }));
+  sb.from('cards').upsert(rows).then(() => {});
+}
+async function syncLocalToCloud() {
+  if (!sb || !cloudUser) return;
+  if (playlists.length) cloudSavePlaylists();
+  if (cards.length) cloudSaveCards();
+  await pullCloudData();
+}
+async function pullCloudData() {
+  if (!sb || !cloudUser) return;
+  const [plRes, cardRes] = await Promise.all([
+    sb.from('playlists').select('*').eq('user_id', cloudUser.id),
+    sb.from('cards').select('*').eq('user_id', cloudUser.id),
+  ]);
+  if (!plRes.error && Array.isArray(plRes.data)) {
+    const cloudPls = plRes.data.map(r => ({
+      id: r.id, name: r.name, emoji: r.emoji || '🎵', is_public: !!r.is_public,
+      tracks: Array.isArray(r.tracks) ? r.tracks : [],
+    }));
+    if (cloudPls.length) {
+      playlists = cloudPls;
+      if (!playlists.find(p => p.id === activePlId)) activePlId = playlists[0].id;
+      localStorage.setItem(LS_PLAYLISTS, JSON.stringify(playlists));
+    }
+  }
+  if (!cardRes.error && Array.isArray(cardRes.data)) {
+    const cloudCards = cardRes.data.map(r => ({ ...(r.data || {}), id: r.id, is_public: !!r.is_public }));
+    if (cloudCards.length) {
+      cards = cloudCards;
+      localStorage.setItem(LS_CARDS, JSON.stringify(cards));
+    }
+  }
+  renderPlaylists();
+  renderGallery();
+}
+
+/* --- link share: ?pl= / ?card= (bisa dibuka siapa pun, tanpa login) --- */
+async function handleShareLink() {
+  const q = new URLSearchParams(location.search);
+  const plId = q.get('pl');
+  const cardId = q.get('card');
+  if (plId && sb) {
+    const { data } = await sb.from('playlists').select('*').eq('id', plId).eq('is_public', true).single();
+    if (data) {
+      playlists = [{
+        id: data.id, name: data.name, emoji: data.emoji || '🎵', is_public: true,
+        tracks: Array.isArray(data.tracks) ? data.tracks : [], shared: true,
+      }];
+      activePlId = data.id;
+      renderPlaylists();
+      $('playlist').scrollIntoView({ behavior: 'smooth' });
+      toast('Playlist publik: ' + data.name + ' 🌍');
+    } else {
+      toast('Playlist nggak ketemu atau bukan public 😢');
+    }
+  }
+  if (cardId && sb) {
+    const { data } = await sb.from('cards').select('*').eq('id', cardId).eq('is_public', true).single();
+    if (data) {
+      cards = [{ ...(data.data || {}), id: data.id, is_public: true, shared: true }];
+      renderGallery();
+      $('card').scrollIntoView({ behavior: 'smooth' });
+      toast('Card publik 💌');
+    } else {
+      toast('Card nggak ketemu atau bukan public 😢');
+    }
+  }
+}
+initCloud();
 
 /* ============ PWA — service worker (installable, offline) ============ */
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
